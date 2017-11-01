@@ -10,14 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
+    ConstraintLayout txt;
     private TextView timer;
     private long startTime = 0L;
-
     private Handler customHandler = new Handler();
 
     long timeInMS = 0L;
@@ -48,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         }, intentFilter);
 
         setContentView(R.layout.activity_main);
+        txt = (ConstraintLayout)findViewById(R.id.ctlid);//se agrego
+        txt.setOnTouchListener(this);
+    }
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Toast.makeText(this, "HOLA MUNDO 100", Toast.LENGTH_LONG).show();
+        return false;
     }
 
     private Runnable updateTimer = new Runnable() {

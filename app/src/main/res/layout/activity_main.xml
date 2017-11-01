@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ctlid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mastercomp.innovacion.practicainnovacion.MainActivity">
@@ -27,7 +28,7 @@
         android:layout_centerHorizontal="true"
         android:textSize="40sp"
         android:textColor="#000"
-        android:text="00:00"
+        android:text="@string/_00_00"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
