@@ -16,5 +16,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+<!--GPSSSSSSSSSSSSSSSSSSSSSS 1-->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView1"
+        tools:layout_editor_absoluteX="29dp"
+        tools:layout_editor_absoluteY="-24dp" />
 
-</android.support.constraint.ConstraintLayout>
+    <!--GPSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS-->
+
+    </android.support.constraint.ConstraintLayout>
