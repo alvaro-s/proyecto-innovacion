@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         //GPS 1
         mensaje1 = (TextView) findViewById(R.id.textView);
 
+
        // mensaje2 = (TextView) findViewById(R.id.textView2);
 //        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //           ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //           locationStart();
 //        }
     }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Toast.makeText(this, "HOLA MUNDO 100", Toast.LENGTH_LONG).show();
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         return false;
     }
 //GPS--------------------------------
+
     private void locationStart() {
         LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Localizacion Local = new Localizacion();
@@ -77,14 +80,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
        // mensaje1.setText("Localizacion agregada");
        // mensaje2.setText("");
     }
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 1000) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                locationStart();
-                return;
-            }
-        }
-    }
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        if (requestCode == 1000) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                locationStart();
+//                return;
+//            }
+//        }
+//    }
 //    public void setLocation(Location loc) {
 //        //Obtener la direccion de la calle a partir de la latitud y la longitud
 //        if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
@@ -111,10 +114,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         public void onLocationChanged(Location loc) {
             loc.getLatitude();
             loc.getLongitude();
-
+            if (loc.getLatitude()>=40.3 && loc.getLatitude()<40.4 && loc.getLongitude()>=-3.7 &&loc.getLongitude()<-3.0)
+            {
+                String Text="Biblioteca Politecnica";
+                mensaje1.setText(Text);
+            }else {
             String Text = "Mi ubicacion actual es: " + "\n Lat = "
                     + loc.getLatitude() + "\n Long = " + loc.getLongitude();
-            mensaje1.setText(Text);
+            mensaje1.setText(Text);}
             //this.mainActivity.setLocation(loc);
         }
         @Override
