@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity{
     private Button startButton;                                 //botón de comienzo
     private Button pauseButton;                                 //botón de pausa
     private TextView interruptions;                             //contador de interrupciones
+    private TextView txtSaludo;
+    String saludo;
     int interruptCounter = 0;
 
     boolean started = false;                                    //determina si el cronómetro está en funcionamiento
@@ -76,7 +81,19 @@ public class MainActivity extends AppCompatActivity{
         mReceiver = new ScreenReceiver();
         registerReceiver(mReceiver, filter);
 
+        //Comprobar si ya existen datos previos
+        String nombre=sharprefs.getString("nombre", "");//interrupciones
+        Intent intentRegistro= new Intent(MainActivity.this, RegistroActivity.class);
+        if(nombre.equals("")){
+            startActivity(intentRegistro);
+            finish();
+        }
+
         setContentView(R.layout.activity_main);
+
+        txtSaludo=(TextView) findViewById(R.id.txtInicio);
+        txtSaludo.setText(txtSaludo.getText().toString().concat(nombre).concat(":"));
+        txtSaludo.setTextColor(Color.parseColor("#9C9C9C"));
 
         //Obtenemos los objetos de la interfaz por medio de su id
         timer = (TextView) findViewById(R.id.timerValue);
