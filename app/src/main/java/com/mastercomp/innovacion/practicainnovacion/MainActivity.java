@@ -10,18 +10,23 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity{
+
 
     ConstraintLayout txt;                                       //el layout de la aplicación
     private TextView timer;                                     //el cronómetro
 
     private static Handler customHandler = new Handler();       //el manejador de los eventos del timer
+
+    private String horainicio;
+    private String horafin;
 
     private Button startButton;                                 //botón de comienzo
     private Button pauseButton;                                 //botón de pausa
@@ -60,9 +65,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //GUARDAR ARCHIVO
         final Context context=this;//crear una variable context para guaradr los datos
         SharedPreferences sharprefs=getSharedPreferences("ArchivoSP",context.MODE_PRIVATE);
+
         //IntentFilters para recibir los eventos de pantalla
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -75,7 +82,6 @@ public class MainActivity extends AppCompatActivity{
         timer = (TextView) findViewById(R.id.timerValue);
 
         interruptions = (TextView) findViewById(R.id.interruptCounter);
-
         startButton = (Button) findViewById(R.id.startButton);
 
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
@@ -83,6 +89,7 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 if(!started) {
                     started = true;
+                    horainicio = getTimeString();
                     Toast.makeText(MainActivity.this, "La próxima vez que se apague la pantalla se pondrá en marcha el cronómetro", Toast.LENGTH_LONG).show();
                 }
             }
@@ -92,14 +99,18 @@ public class MainActivity extends AppCompatActivity{
         pauseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //SE GUARDA LA INFORMACION DE LAS INTERRUPCINES Y EL TIEMPO
-                SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
-                SharedPreferences.Editor editor=sharpref.edit();
-                editor.putString("MiInte",interruptions.getText().toString());
-                editor.putString("MiTiem",timer.getText().toString());
-                editor.commit();
-//-----------------------------//
                 if(started) {
                     started = false;
+                    horafin = getTimeString();
+                    SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor=sharpref.edit();
+                    editor.putString("MiInte",interruptions.getText().toString());
+                    editor.putString("MiTiem",timer.getText().toString());
+                    editor.putString("HIni", horainicio.toString());
+                    editor.putString("HFin", horafin.toString());
+                    editor.commit();
+                    //-----------------------------//
+
                     timer.setText("0:00");
                     startTime = 0L;
                     timeInMS = 0L;
@@ -107,18 +118,21 @@ public class MainActivity extends AppCompatActivity{
                     timeSwapBuff = 0L;
                     interruptCounter = 0;
                     interruptions.setText("0");
-                }
-                //SE MUESTRA LA INFORMACION EN UNN TOAST
-                String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones
-                String tiempo=sharpref.getString("MiTiem","No hay Dato");//tiempo
-                Toast.makeText(getApplicationContext(),"Numero de Interrupciones:"+ inte +"\n"+"Tiempo Total:"+tiempo,Toast.LENGTH_LONG).show();
-                //--------------------//
+                    //SE MUESTRA LA INFORMACION EN UNN TOAST
+                    String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones
+                    String tiempo=sharpref.getString("MiTiem","No hay Dato");//tiempo
+                    String hini = sharpref.getString("HIni", "No hay Dato"); //hora inicio
+                    String hfin = sharpref.getString("HFin", "No hay Dato"); //hora inicio
+                    Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+ inte +
+                            "\nTiempo Total: " + tiempo + "\nHora inicio: " + hini + "\nHora fin: " +
+                            hfin, Toast.LENGTH_LONG).show();
+                 }  //--------------------//
             }
         });
         txt = (ConstraintLayout)findViewById(R.id.ctlid);
     }
 
-     Runnable updateTimer = new Runnable() {
+    Runnable updateTimer = new Runnable() {
          //Este runnable controla el timer
         @Override
         public void run() {
@@ -136,5 +150,31 @@ public class MainActivity extends AppCompatActivity{
 
         }
     };
+
+    private String getTimeString(){
+        Calendar rightnow = Calendar.getInstance();
+        String horah = "";
+        if(rightnow.get(Calendar.MINUTE) < 10){
+            horah = "0" + rightnow.get(Calendar.HOUR_OF_DAY);
+        }
+        else{
+            horah = "" + rightnow.get(Calendar.HOUR_OF_DAY);
+        }
+        String horam = "";
+        if(rightnow.get(Calendar.HOUR_OF_DAY) < 10){
+            horam = "0" + rightnow.get(Calendar.MINUTE);
+        }
+        else{
+            horam = "" + rightnow.get(Calendar.MINUTE);
+        }
+        String horas = "";
+        if(rightnow.get(Calendar.SECOND) < 10){
+            horas = "0" + rightnow.get(Calendar.SECOND);
+        }
+        else{
+            horas = "" + rightnow.get(Calendar.SECOND);
+        }
+        return horah + ":" + horam + ":" + horas;
+    }
 
 }
