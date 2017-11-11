@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -59,6 +60,9 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //GUARDAR ARCHIVO
+        final Context context=this;//crear una variable context para guaradr los datos
+        SharedPreferences sharprefs=getSharedPreferences("ArchivoSP",context.MODE_PRIVATE);
         //IntentFilters para recibir los eventos de pantalla
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -87,6 +91,13 @@ public class MainActivity extends AppCompatActivity{
         pauseButton = (Button) findViewById(R.id.pauseButton);
         pauseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                //SE GUARDA LA INFORMACION DE LAS INTERRUPCINES Y EL TIEMPO
+                SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
+                SharedPreferences.Editor editor=sharpref.edit();
+                editor.putString("MiInte",interruptions.getText().toString());
+                editor.putString("MiTiem",timer.getText().toString());
+                editor.commit();
+//-----------------------------//
                 if(started) {
                     started = false;
                     timer.setText("0:00");
@@ -97,6 +108,11 @@ public class MainActivity extends AppCompatActivity{
                     interruptCounter = 0;
                     interruptions.setText("0");
                 }
+                //SE MUESTRA LA INFORMACION EN UNN TOAST
+                String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones
+                String tiempo=sharpref.getString("MiTiem","No hay Dato");//tiempo
+                Toast.makeText(getApplicationContext(),"Numero de Interrupciones:"+ inte +"\n"+"Tiempo Total:"+tiempo,Toast.LENGTH_LONG).show();
+                //--------------------//
             }
         });
         txt = (ConstraintLayout)findViewById(R.id.ctlid);
