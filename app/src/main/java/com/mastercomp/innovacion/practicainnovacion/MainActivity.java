@@ -183,14 +183,14 @@ public class MainActivity extends AppCompatActivity{
     private String getTimeString(){
         Calendar rightnow = Calendar.getInstance();
         String horah = "";
-        if(rightnow.get(Calendar.MINUTE) < 10){
+        if(rightnow.get(Calendar.HOUR_OF_DAY) < 10){
             horah = "0" + rightnow.get(Calendar.HOUR_OF_DAY);
         }
         else{
             horah = "" + rightnow.get(Calendar.HOUR_OF_DAY);
         }
         String horam = "";
-        if(rightnow.get(Calendar.HOUR_OF_DAY) < 10){
+        if(rightnow.get(Calendar.MINUTE) < 10){
             horam = "0" + rightnow.get(Calendar.MINUTE);
         }
         else{

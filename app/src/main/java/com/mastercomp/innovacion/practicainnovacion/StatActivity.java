@@ -54,7 +54,7 @@ public class StatActivity extends AppCompatActivity {
 
         float fTiempoTotal = ffin - fini;
 
-        String[] xData = new String[]{"Tiempo aprovechado", "Tiempo total"};
+        String[] xData = new String[]{"Tiempo aprovechado", "Tiempo perdido"};
         float[] yData = {(fTiempoAprovechado/fTiempoTotal) * 100, (1-(fTiempoAprovechado/fTiempoTotal)) * 100};
 
         TextView interruptions = (TextView) findViewById(R.id.interruptCounter2);
