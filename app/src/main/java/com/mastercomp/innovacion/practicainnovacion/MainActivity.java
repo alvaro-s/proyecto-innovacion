@@ -33,9 +33,10 @@ public class MainActivity extends AppCompatActivity{
 
     private Button startButton;                                 //botón de comienzo
     private Button pauseButton;                                 //botón de pausa
+    private Button statButton;                                  //botón de estadísticas
     private TextView interruptions;                             //contador de interrupciones
     private TextView txtSaludo;
-    String saludo;
+    //String saludo;
     int interruptCounter = 0;
 
     boolean started = false;                                    //determina si el cronómetro está en funcionamiento
@@ -99,6 +100,17 @@ public class MainActivity extends AppCompatActivity{
         timer = (TextView) findViewById(R.id.timerValue);
 
         interruptions = (TextView) findViewById(R.id.interruptCounter);
+
+        statButton = (Button) findViewById(R.id.statbutton);
+
+        //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
+        statButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent myIntent = new Intent(MainActivity.this, StatActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
         startButton = (Button) findViewById(R.id.startButton);
 
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
@@ -119,7 +131,7 @@ public class MainActivity extends AppCompatActivity{
                 if(started) {
                     started = false;
                     horafin = getTimeString();
-                    SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
+                    SharedPreferences sharpref=getSharedPreferences("ArchivoSP", context.MODE_PRIVATE);
                     SharedPreferences.Editor editor=sharpref.edit();
                     editor.putString("MiInte",interruptions.getText().toString());
                     editor.putString("MiTiem",timer.getText().toString());
