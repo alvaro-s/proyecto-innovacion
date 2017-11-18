@@ -1,5 +1,6 @@
 package com.mastercomp.innovacion.practicainnovacion;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity{
@@ -45,6 +43,8 @@ public class MainActivity extends AppCompatActivity{
     long timeInMS = 0L;
     long updatedTime = 0L;
     long timeSwapBuff = 0L;
+
+
 
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
