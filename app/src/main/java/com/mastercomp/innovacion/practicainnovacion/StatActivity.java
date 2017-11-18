@@ -1,10 +1,11 @@
 package com.mastercomp.innovacion.practicainnovacion;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -13,8 +14,12 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.mastercomp.innovacion.practicainnovacion.entidades.Sesion;
+import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
+import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class StatActivity extends AppCompatActivity {
@@ -37,11 +42,19 @@ public class StatActivity extends AppCompatActivity {
         addDataSet();
     }
     private void addDataSet() {
-        SharedPreferences sharpref=getSharedPreferences("ArchivoSP", this.MODE_PRIVATE);
+       /* SharedPreferences sharpref=getSharedPreferences("ArchivoSP", this.MODE_PRIVATE);
         String tiempo = sharpref.getString("MiTiem","No hay Dato");//tiempo
         String hini = sharpref.getString("HIni", "No hay Dato"); //hora inicio
         String hfin = sharpref.getString("HFin", "No hay Dato"); //hora inicio
-        String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones
+        String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones*/
+
+        List<Sesion> listSesiones= consultarSesiones();
+        Sesion sesion=listSesiones.get(0);
+
+        String tiempo = sesion.getTiempo_estudio();//tiempo
+        String hini = sesion.getHoraInicio(); //hora inicio
+        String hfin = sesion.getHoraFin(); //hora inicio
+        String inte = String.valueOf(sesion.getInterrupciones());//interrupciones
 
         String [] tiempoSplit = tiempo.split(":");
         float fTiempoAprovechado = Integer.parseInt(tiempoSplit[0])*60 + Integer.parseInt(tiempoSplit[1]);
@@ -82,5 +95,73 @@ public class StatActivity extends AppCompatActivity {
         pieData.setValueFormatter(new PercentFormatter());
         pieChart.setData(pieData);
         pieChart.invalidate();
+    }
+
+    private List<Sesion> consultarSesiones() {
+        List<Sesion> sesionList= new ArrayList<>();
+
+        AdminSQLiteOpenHelper conn = new AdminSQLiteOpenHelper(this,
+                "bd_usuarios", null, 1);
+
+        SQLiteDatabase bd = conn.getReadableDatabase();
+
+        Cursor cursor = bd.rawQuery("select * from sesion", null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Sesion sesion= cursorToEntity(cursor);
+                sesionList.add(sesion);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+
+        bd.close();
+        return sesionList;
+    }
+
+    protected Sesion cursorToEntity(Cursor cursor) {
+        Sesion sesion = new Sesion();
+        int idIndex;
+        int fechaIndex;
+        int horaInicioIndex;
+        int horaFinIndex;
+        int tiempoEstudioIndex;
+        int interrupcionesIndex;
+        int idUsuarioIndex;
+
+        if (cursor != null) {
+            if (cursor.getColumnIndex(Constantes.CAMPO_ID_SESION) != -1) {
+                idIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_SESION);
+                sesion.setIdSesion(cursor.getString(idIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_FECHA) != -1) {
+                fechaIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_FECHA);
+                sesion.setFecha(cursor.getString(fechaIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_INICIO) != -1) {
+                horaInicioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_INICIO);
+                sesion.setHoraInicio(cursor.getString(horaInicioIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_FIN) != -1) {
+                horaFinIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_FIN);
+                sesion.setHoraFin(cursor.getString(horaFinIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_TIEMPO_ESTUDIO) != -1) {
+                tiempoEstudioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_TIEMPO_ESTUDIO);
+                sesion.setTiempo_estudio(cursor.getString(tiempoEstudioIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_INTERRUPCIONES) != -1) {
+                interrupcionesIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_INTERRUPCIONES);
+                sesion.setInterrupciones(cursor.getInt(interrupcionesIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_ID_USUARIO) != -1) {
+                idUsuarioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_USUARIO);
+                sesion.setIdUsuario(cursor.getString(idUsuarioIndex));
+            }
+
+        }
+        return sesion;
     }
 }

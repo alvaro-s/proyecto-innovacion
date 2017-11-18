@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setIdUsuario(usuario.getIdUsuario());
                     sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString()));
                     sesion.setFecha(date.toString());
-                    sesion.setTiempo_estudio(timer.getText().toString());
+                    sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
 
@@ -279,75 +279,6 @@ public class MainActivity extends AppCompatActivity{
 
         db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
         db.close();
-    }
-
-    private List<Sesion> consultarSesiones() {
-        List<Sesion> sesionList= new ArrayList<>();
-
-        AdminSQLiteOpenHelper conn = new AdminSQLiteOpenHelper(this,
-                "bd_usuarios", null, 1);
-
-        SQLiteDatabase bd = conn.getReadableDatabase();
-
-        Cursor cursor = bd.rawQuery("select * from sesion", null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Sesion sesion= cursorToEntity(cursor);
-                sesionList.add(sesion);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-
-        bd.close();
-        cursor.close();
-        return sesionList;
-    }
-
-    protected Sesion cursorToEntity(Cursor cursor) {
-        Sesion sesion = new Sesion();
-        int idIndex;
-        int fechaIndex;
-        int horaInicioIndex;
-        int horaFinIndex;
-        int tiempoEstudioIndex;
-        int interrupcionesIndex;
-        int idUsuarioIndex;
-
-        if (cursor != null) {
-            if (cursor.getColumnIndex(Constantes.CAMPO_ID_SESION) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_SESION);
-                sesion.setIdSesion(cursor.getString(idIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_FECHA) != -1) {
-                fechaIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_FECHA);
-                sesion.setFecha(cursor.getString(fechaIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_INICIO) != -1) {
-                horaInicioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_INICIO);
-                sesion.setHoraInicio(cursor.getString(horaInicioIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_FIN) != -1) {
-                horaFinIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_FIN);
-                sesion.setHoraFin(cursor.getString(horaFinIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_TIEMPO_ESTUDIO) != -1) {
-                tiempoEstudioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_TIEMPO_ESTUDIO);
-                sesion.setTiempo_estudio(cursor.getString(tiempoEstudioIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_INTERRUPCIONES) != -1) {
-                interrupcionesIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_INTERRUPCIONES);
-                sesion.setInterrupciones(cursor.getInt(interrupcionesIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_ID_USUARIO) != -1) {
-                idUsuarioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_USUARIO);
-                sesion.setIdUsuario(cursor.getString(idUsuarioIndex));
-            }
-
-        }
-        return sesion;
     }
 
 }
