@@ -48,8 +48,8 @@ public class StatActivity extends AppCompatActivity {
         String hfin = sharpref.getString("HFin", "No hay Dato"); //hora inicio
         String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones*/
 
-        List<Sesion> listSesiones= consultarSesiones();
-        Sesion sesion=listSesiones.get(0);
+        List<Sesion> listSesiones= consultarSesiones();//lista de sesiones gurdadas en la base
+        Sesion sesion=listSesiones.get(listSesiones.size()-1);//Toma de la lista el último registro
 
         String tiempo = sesion.getTiempo_estudio();//tiempo
         String hini = sesion.getHoraInicio(); //hora inicio
@@ -97,6 +97,7 @@ public class StatActivity extends AppCompatActivity {
         pieChart.invalidate();
     }
 
+    //Consulta en la base todos los registros de sesiones y devuelve una lista
     private List<Sesion> consultarSesiones() {
         List<Sesion> sesionList= new ArrayList<>();
 
@@ -121,6 +122,7 @@ public class StatActivity extends AppCompatActivity {
         return sesionList;
     }
 
+    //Realiza el paso de cursor a la clase sesion para facilidad de uso
     protected Sesion cursorToEntity(Cursor cursor) {
         Sesion sesion = new Sesion();
         int idIndex;
