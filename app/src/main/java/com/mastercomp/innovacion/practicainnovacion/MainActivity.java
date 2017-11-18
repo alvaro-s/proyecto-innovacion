@@ -1,12 +1,15 @@
 package com.mastercomp.innovacion.practicainnovacion;
 
 import android.app.Service;
+import android.animation.FloatEvaluator;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -16,7 +19,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mastercomp.innovacion.practicainnovacion.entidades.Sesion;
+import com.mastercomp.innovacion.practicainnovacion.entidades.Usuario;
+import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
+import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -34,7 +47,10 @@ public class MainActivity extends AppCompatActivity{
     private Button statButton;                                  //botón de estadísticas
     private TextView interruptions;                             //contador de interrupciones
     private TextView txtSaludo;
-    //String saludo;
+
+    private Usuario usuario;
+    private Sesion sesion;
+
     int interruptCounter = 0;
 
     boolean started = false;                                    //determina si el cronómetro está en funcionamiento
@@ -43,8 +59,6 @@ public class MainActivity extends AppCompatActivity{
     long timeInMS = 0L;
     long updatedTime = 0L;
     long timeSwapBuff = 0L;
-
-
 
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
@@ -83,9 +97,9 @@ public class MainActivity extends AppCompatActivity{
         registerReceiver(mReceiver, filter);
 
         //Comprobar si ya existen datos previos
-        String nombre=sharprefs.getString("nombre", "");//interrupciones
+        usuario = consultarUsuario();
         Intent intentRegistro= new Intent(MainActivity.this, RegistroActivity.class);
-        if(nombre.equals("")){
+        if(usuario.getNombre().equals("")){
             startActivity(intentRegistro);
             finish();
         }
@@ -93,8 +107,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         txtSaludo=(TextView) findViewById(R.id.txtInicio);
-        txtSaludo.setText(txtSaludo.getText().toString().concat(nombre).concat(":"));
-        txtSaludo.setTextColor(Color.parseColor("#9C9C9C"));
+        txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat(":"));
 
         //Obtenemos los objetos de la interfaz por medio de su id
         timer = (TextView) findViewById(R.id.timerValue);
@@ -130,8 +143,10 @@ public class MainActivity extends AppCompatActivity{
                 //SE GUARDA LA INFORMACION DE LAS INTERRUPCINES Y EL TIEMPO
                 if(started) {
                     started = false;
-                    horafin = getTimeString();
+                    /*horafin = getTimeString();
                     SharedPreferences sharpref=getSharedPreferences("ArchivoSP", context.MODE_PRIVATE);
+                    horafin = getTimeString();
+                    SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
                     SharedPreferences.Editor editor=sharpref.edit();
                     editor.putString("MiInte",interruptions.getText().toString());
                     editor.putString("MiTiem",timer.getText().toString());
@@ -154,7 +169,25 @@ public class MainActivity extends AppCompatActivity{
                     String hfin = sharpref.getString("HFin", "No hay Dato"); //hora inicio
                     Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+ inte +
                             "\nTiempo Total: " + tiempo + "\nHora inicio: " + hini + "\nHora fin: " +
-                            hfin, Toast.LENGTH_LONG).show();
+                            hfin, Toast.LENGTH_LONG).show();*/
+
+                    Date date= new Date();
+                    sesion= new Sesion();
+                    sesion.setIdSesion(UUID.randomUUID().toString());
+                    sesion.setIdUsuario(usuario.getIdUsuario());
+                    sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString()));
+                    sesion.setFecha(date.toString());
+                    sesion.setTiempo_estudio(timer.getText().toString());
+                    sesion.setHoraInicio(horainicio);
+                    sesion.setHoraFin(getTimeString());
+
+                    crearSesion(sesion);
+
+                    Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+
+                            sesion.getInterrupciones() + "\nTiempo Total: " +
+                            sesion.getTiempo_estudio()+ "\nHora inicio: " + sesion.getHoraInicio() +
+                            "\nHora fin: " + sesion.getHoraFin(), Toast.LENGTH_LONG).show();
+
                  }  //--------------------//
             }
         });
@@ -204,6 +237,116 @@ public class MainActivity extends AppCompatActivity{
             horas = "" + rightnow.get(Calendar.SECOND);
         }
         return horah + ":" + horam + ":" + horas;
+    }
+
+    //OPERACIONES BDD
+
+    private Usuario consultarUsuario() {
+        Usuario usuario= new Usuario();
+        AdminSQLiteOpenHelper conn = new AdminSQLiteOpenHelper(this,
+                "bd_usuarios", null, 1);
+
+        SQLiteDatabase bd = conn.getReadableDatabase();
+
+        Cursor fila = bd.rawQuery("select * from usuario", null);
+
+        if (fila.moveToFirst()) {
+            usuario.setIdUsuario(fila.getString(0));
+            usuario.setNombre(fila.getString(1));
+            usuario.setApellido(fila.getString(2));
+        }
+        else
+            usuario.setNombre("");
+        bd.close();
+        fila.close();
+        return usuario;
+    }
+
+    private void crearSesion(Sesion sesion) {
+        AdminSQLiteOpenHelper conn=new AdminSQLiteOpenHelper(this,"bd_usuarios",null,1);
+
+        SQLiteDatabase db=conn.getWritableDatabase();
+
+        ContentValues values=new ContentValues();
+        values.put(Constantes.CAMPO_ID_SESION, sesion.getIdSesion());
+        values.put(Constantes.CAMPO_FECHA, sesion.getFecha());
+        values.put(Constantes.CAMPO_HORA_FIN, sesion.getHoraFin());
+        values.put(Constantes.CAMPO_HORA_INICIO, sesion.getHoraInicio());
+        values.put(Constantes.CAMPO_INTERRUPCIONES, sesion.getInterrupciones());
+        values.put(Constantes.CAMPO_ID_USUARIO, sesion.getIdUsuario());
+        values.put(Constantes.CAMPO_TIEMPO_ESTUDIO, sesion.getTiempo_estudio());
+
+        db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
+        db.close();
+    }
+
+    private List<Sesion> consultarSesiones() {
+        List<Sesion> sesionList= new ArrayList<>();
+
+        AdminSQLiteOpenHelper conn = new AdminSQLiteOpenHelper(this,
+                "bd_usuarios", null, 1);
+
+        SQLiteDatabase bd = conn.getReadableDatabase();
+
+        Cursor cursor = bd.rawQuery("select * from sesion", null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Sesion sesion= cursorToEntity(cursor);
+                sesionList.add(sesion);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+
+        bd.close();
+        cursor.close();
+        return sesionList;
+    }
+
+    protected Sesion cursorToEntity(Cursor cursor) {
+        Sesion sesion = new Sesion();
+        int idIndex;
+        int fechaIndex;
+        int horaInicioIndex;
+        int horaFinIndex;
+        int tiempoEstudioIndex;
+        int interrupcionesIndex;
+        int idUsuarioIndex;
+
+        if (cursor != null) {
+            if (cursor.getColumnIndex(Constantes.CAMPO_ID_SESION) != -1) {
+                idIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_SESION);
+                sesion.setIdSesion(cursor.getString(idIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_FECHA) != -1) {
+                fechaIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_FECHA);
+                sesion.setFecha(cursor.getString(fechaIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_INICIO) != -1) {
+                horaInicioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_INICIO);
+                sesion.setHoraInicio(cursor.getString(horaInicioIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_FIN) != -1) {
+                horaFinIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_FIN);
+                sesion.setHoraFin(cursor.getString(horaFinIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_TIEMPO_ESTUDIO) != -1) {
+                tiempoEstudioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_TIEMPO_ESTUDIO);
+                sesion.setTiempo_estudio(cursor.getString(tiempoEstudioIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_INTERRUPCIONES) != -1) {
+                interrupcionesIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_INTERRUPCIONES);
+                sesion.setInterrupciones(cursor.getInt(interrupcionesIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_ID_USUARIO) != -1) {
+                idUsuarioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_USUARIO);
+                sesion.setIdUsuario(cursor.getString(idUsuarioIndex));
+            }
+
+        }
+        return sesion;
     }
 
 }
