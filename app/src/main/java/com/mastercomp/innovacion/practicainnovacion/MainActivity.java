@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        clickedStart = false;
+
         //GUARDAR ARCHIVO
         final Context context=this;//crear una variable context para guaradr los datos
         SharedPreferences sharprefs=getSharedPreferences("ArchivoSP",context.MODE_PRIVATE);
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity{
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if(!clickedStart) {
-
+                    mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
                    // mChronometerDistraction.stop();
                   //  mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
                    // mChronometerDistraction.start(); // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
@@ -167,6 +169,8 @@ public class MainActivity extends AppCompatActivity{
                     mChronometerDistraction.stop();
                     lastPause = 0;
                     clickedStart = false;
+
+
                     /*horafin = getTimeString();
                     SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
                     horafin = getTimeString();
@@ -178,9 +182,7 @@ public class MainActivity extends AppCompatActivity{
                     editor.putString("HFin", horafin.toString());
                     editor.commit();
                     //-----------------------------//
-                    mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-                    interruptCounter = 0;
-                    interruptions.setText("0");
+
 
                     //SE MUESTRA LA INFORMACION EN UNN TOAST
                     String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones
@@ -202,6 +204,10 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setHoraFin(getTimeString());
 
                     crearSesion(sesion);
+
+                    mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
+                    interruptCounter = 0;
+                    interruptions.setText("0");
 
                     Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+
                             sesion.getInterrupciones() + "\nTiempo Total: " +
