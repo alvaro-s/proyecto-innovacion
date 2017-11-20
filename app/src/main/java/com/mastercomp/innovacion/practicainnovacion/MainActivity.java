@@ -1,7 +1,7 @@
 package com.mastercomp.innovacion.practicainnovacion;
 
-import android.app.Service;
 import android.animation.FloatEvaluator;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,8 +15,10 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +37,6 @@ public class MainActivity extends AppCompatActivity{
 
 
     ConstraintLayout txt;                                       //el layout de la aplicación
-    private TextView timer;                                     //el cronómetro
 
     private static Handler customHandler = new Handler();       //el manejador de los eventos del timer
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity{
     private Button pauseButton;                                 //botón de pausa
     private Button statButton;                                  //botón de estadísticas
     private TextView interruptions;                             //contador de interrupciones
+    private Chronometer mChronometerDistraction; // este es el cronometro que contara el tiempo de distraccion
     private TextView txtSaludo;
 
     private Usuario usuario;
@@ -53,12 +55,13 @@ public class MainActivity extends AppCompatActivity{
 
     int interruptCounter = 0;
 
-    boolean started = false;                                    //determina si el cronómetro está en funcionamiento
+    private long lastPause; //esta variable se usa para buscar asignarle el valor de donde pauso el cronometro y de ahi continuar a contar el cronometro
+    private boolean TimeRunning= false; // usa este booleano para saber si el tiempo esta corriendo
+    private boolean ResumeTimer = false;//usa este booleano para saber si se seguira en el tiempo que se quedo cuando se apago la pantalla
 
-    private static long startTime = 0L;                         //variables que se usan para el funcionamiento del timer
-    long timeInMS = 0L;
-    long updatedTime = 0L;
-    long timeSwapBuff = 0L;
+    private boolean clickedStart = false;
+
+    ScreenReceiver mReceiver;
 
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
@@ -66,25 +69,42 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             //Si se recibe un evento de pantalla apagada, se actualiza el tiempo de comienzo del timer y se espera al próximo evento
-            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF) && started) {
-                startTime = SystemClock.uptimeMillis();
-                customHandler.postDelayed(updateTimer, 0);
+            if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                //Si el booleano ResumeTimer es true (el cronometro empezara a contar desde el valor de la ultima pausa ya que se apago la pantalla )y timerunning es true (el usuario le dio start) resume el tiempo en que se quedo el cronometro
+                if (clickedStart) {
+                    if(lastPause == 0){
+                        mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
+                    }
+                    else {
+                        long intervalOnPause = (SystemClock.elapsedRealtime() - lastPause);
+                        mChronometerDistraction.setBase(mChronometerDistraction.getBase() + intervalOnPause );
+                        Log.d("Base Chrono", "" + (mChronometerDistraction.getBase()));
+                        Log.d("Time now", "" + SystemClock.elapsedRealtime());
+                        Log.d("Last pause", "" + lastPause);
+                    }
+                    mChronometerDistraction.start();
+                }
+                //pantalla esta apagada
+            } else if(intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
 
-            //Si se recibe un evento de pantalla entendida, se suma el tiempo que ha pasado y se actualiza el texto del cronómetro
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON) && started) {
-                interruptCounter++;
-                interruptions.setText("" + interruptCounter);
-                timeSwapBuff += timeInMS;
-                customHandler.removeCallbacks(updateTimer);
+                //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
+                if (clickedStart) {
+                    interruptCounter++;
+                    interruptions.setText("" + interruptCounter);
+                    lastPause = SystemClock.elapsedRealtime();
+                    mChronometerDistraction.stop();
 
+                }
             }
         }
     }
 
-    ScreenReceiver mReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        clickedStart = false;
 
         //GUARDAR ARCHIVO
         final Context context=this;//crear una variable context para guaradr los datos
@@ -110,10 +130,8 @@ public class MainActivity extends AppCompatActivity{
         txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat(":"));
 
         //Obtenemos los objetos de la interfaz por medio de su id
-        timer = (TextView) findViewById(R.id.timerValue);
 
         interruptions = (TextView) findViewById(R.id.interruptCounter);
-
         statButton = (Button) findViewById(R.id.statbutton);
 
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
@@ -126,11 +144,17 @@ public class MainActivity extends AppCompatActivity{
 
         startButton = (Button) findViewById(R.id.startButton);
 
+        mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
+
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if(!started) {
-                    started = true;
+                if(!clickedStart) {
+                    mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
+                   // mChronometerDistraction.stop();
+                  //  mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
+                   // mChronometerDistraction.start(); // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
+                    clickedStart = true;
                     horainicio = getTimeString();
                     Toast.makeText(MainActivity.this, "La próxima vez que se apague la pantalla se pondrá en marcha el cronómetro", Toast.LENGTH_LONG).show();
                 }
@@ -141,27 +165,25 @@ public class MainActivity extends AppCompatActivity{
         pauseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //SE GUARDA LA INFORMACION DE LAS INTERRUPCINES Y EL TIEMPO
-                if(started) {
-                    started = false;
+                if(clickedStart) {
+                    mChronometerDistraction.stop();
+                    lastPause = 0;
+                    clickedStart = false;
+
+
                     /*horafin = getTimeString();
-                    SharedPreferences sharpref=getSharedPreferences("ArchivoSP", context.MODE_PRIVATE);
-                    horafin = getTimeString();
                     SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
+                    horafin = getTimeString();
+                    SharedPreferences sharpref=getSharedPreferences("ArchivoSP", context.MODE_PRIVATE);
                     SharedPreferences.Editor editor=sharpref.edit();
                     editor.putString("MiInte",interruptions.getText().toString());
-                    editor.putString("MiTiem",timer.getText().toString());
+                    editor.putString("MiTiem",mChronometerDistraction.getText().toString());
                     editor.putString("HIni", horainicio.toString());
                     editor.putString("HFin", horafin.toString());
                     editor.commit();
                     //-----------------------------//
 
-                    timer.setText("0:00");
-                    startTime = 0L;
-                    timeInMS = 0L;
-                    updatedTime = 0L;
-                    timeSwapBuff = 0L;
-                    interruptCounter = 0;
-                    interruptions.setText("0");
+
                     //SE MUESTRA LA INFORMACION EN UNN TOAST
                     String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones
                     String tiempo=sharpref.getString("MiTiem","No hay Dato");//tiempo
@@ -177,11 +199,15 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setIdUsuario(usuario.getIdUsuario());
                     sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString()));
                     sesion.setFecha(date.toString());
-                    sesion.setTiempo_estudio(timer.getText().toString());
+                    sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
 
                     crearSesion(sesion);
+
+                    mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
+                    interruptCounter = 0;
+                    interruptions.setText("0");
 
                     Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+
                             sesion.getInterrupciones() + "\nTiempo Total: " +
@@ -193,25 +219,6 @@ public class MainActivity extends AppCompatActivity{
         });
         txt = (ConstraintLayout)findViewById(R.id.ctlid);
     }
-
-    Runnable updateTimer = new Runnable() {
-         //Este runnable controla el timer
-        @Override
-        public void run() {
-            //Cuando se llama a run, se calcula el tiempo que ha pasado y el que es ahora, y se actualiza el timer
-            timeInMS = SystemClock.uptimeMillis() - startTime;
-            updatedTime = timeSwapBuff + timeInMS;
-
-            int secs = (int) (updatedTime / 1000);
-            int mins = secs / 60;
-            secs = secs % 60;
-
-            timer.setText("" + mins + ":"
-                    + String.format("%02d", secs));
-            customHandler.postDelayed(this, 0);
-
-        }
-    };
 
     private String getTimeString(){
         Calendar rightnow = Calendar.getInstance();
@@ -278,75 +285,6 @@ public class MainActivity extends AppCompatActivity{
 
         db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
         db.close();
-    }
-
-    private List<Sesion> consultarSesiones() {
-        List<Sesion> sesionList= new ArrayList<>();
-
-        AdminSQLiteOpenHelper conn = new AdminSQLiteOpenHelper(this,
-                "bd_usuarios", null, 1);
-
-        SQLiteDatabase bd = conn.getReadableDatabase();
-
-        Cursor cursor = bd.rawQuery("select * from sesion", null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Sesion sesion= cursorToEntity(cursor);
-                sesionList.add(sesion);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-
-        bd.close();
-        cursor.close();
-        return sesionList;
-    }
-
-    protected Sesion cursorToEntity(Cursor cursor) {
-        Sesion sesion = new Sesion();
-        int idIndex;
-        int fechaIndex;
-        int horaInicioIndex;
-        int horaFinIndex;
-        int tiempoEstudioIndex;
-        int interrupcionesIndex;
-        int idUsuarioIndex;
-
-        if (cursor != null) {
-            if (cursor.getColumnIndex(Constantes.CAMPO_ID_SESION) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_SESION);
-                sesion.setIdSesion(cursor.getString(idIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_FECHA) != -1) {
-                fechaIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_FECHA);
-                sesion.setFecha(cursor.getString(fechaIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_INICIO) != -1) {
-                horaInicioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_INICIO);
-                sesion.setHoraInicio(cursor.getString(horaInicioIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_HORA_FIN) != -1) {
-                horaFinIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_HORA_FIN);
-                sesion.setHoraFin(cursor.getString(horaFinIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_TIEMPO_ESTUDIO) != -1) {
-                tiempoEstudioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_TIEMPO_ESTUDIO);
-                sesion.setTiempo_estudio(cursor.getString(tiempoEstudioIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_INTERRUPCIONES) != -1) {
-                interrupcionesIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_INTERRUPCIONES);
-                sesion.setInterrupciones(cursor.getInt(interrupcionesIndex));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_ID_USUARIO) != -1) {
-                idUsuarioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_USUARIO);
-                sesion.setIdUsuario(cursor.getString(idUsuarioIndex));
-            }
-
-        }
-        return sesion;
     }
 
 }
