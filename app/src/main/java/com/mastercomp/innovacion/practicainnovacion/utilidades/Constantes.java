@@ -19,7 +19,7 @@ public class Constantes {
     public static final String CREAR_TABLA_USUARIO="CREATE TABLE " +
             ""+TABLA_USUARIO+" ("+CAMPO_ID+" " +
             "TEXT, "+CAMPO_NOMBRE+" TEXT,"+CAMPO_APELLIDO+" TEXT)";
-
+///sadasd
     //Constantes campos tabla sesion
     public static final String TABLA_SESION="sesion";
     public static final String CAMPO_ID_SESION="id_sesion";
