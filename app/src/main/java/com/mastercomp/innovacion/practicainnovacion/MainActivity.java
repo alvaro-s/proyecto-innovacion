@@ -205,6 +205,8 @@ public class MainActivity extends AppCompatActivity{
 
                     crearSesion(sesion);
 
+                    System.out.println();
+
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
                     interruptCounter = 0;
                     interruptions.setText("0");
