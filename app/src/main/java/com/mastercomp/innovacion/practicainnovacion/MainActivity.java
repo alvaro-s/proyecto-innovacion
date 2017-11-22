@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity{
     //GPS
     private TextView mensaje1;
     private TextView mensaje2;
+    private TextView tvUbicacion;
 
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
@@ -113,23 +114,18 @@ public class MainActivity extends AppCompatActivity{
             }
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         clickedStart = false;
-
         //GUARDAR ARCHIVO
         final Context context=this;//crear una variable context para guaradr los datos
         SharedPreferences sharprefs=getSharedPreferences("ArchivoSP",context.MODE_PRIVATE);
-
         //IntentFilters para recibir los eventos de pantalla
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         mReceiver = new ScreenReceiver();
         registerReceiver(mReceiver, filter);
-
         //Comprobar si ya existen datos previos
         usuario = consultarUsuario();
         Intent intentRegistro= new Intent(MainActivity.this, RegistroActivity.class);
@@ -137,25 +133,24 @@ public class MainActivity extends AppCompatActivity{
             startActivity(intentRegistro);
             finish();
         }
-
         setContentView(R.layout.activity_main);
-        txtSaludo=(TextView) findViewById(R.id.txtInicio);
-        txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat(":"));
         //GPS
         mensaje1 = (TextView) findViewById(R.id.tvlongitud);
         mensaje2 = (TextView) findViewById(R.id.tvlatitud);
+        tvUbicacion=(TextView)findViewById(R.id.tvUbicacion);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
         } else {
             locationStart();
         }
         // ---
+        txtSaludo=(TextView) findViewById(R.id.txtInicio);
+        txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat(":"));
 
         //Obtenemos los objetos de la interfaz por medio de su id
-
         interruptions = (TextView) findViewById(R.id.interruptCounter);
         statButton = (Button) findViewById(R.id.statbutton);
-
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         statButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -163,11 +158,8 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(myIntent);
             }
         });
-
         startButton = (Button) findViewById(R.id.startButton);
-
         mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
-
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -189,7 +181,6 @@ public class MainActivity extends AppCompatActivity{
                     mChronometerDistraction.stop();
                     lastPause = 0;
                     clickedStart = false;
-
                     Date date= new Date();
                     sesion= new Sesion();
                     sesion.setIdSesion(UUID.randomUUID().toString());
@@ -199,18 +190,15 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
-
                     crearSesion(sesion);
 
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
                     interruptCounter = 0;
                     interruptions.setText("0");
-
                     Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+
                             sesion.getInterrupciones() + "\nTiempo Total: " +
                             sesion.getTiempo_estudio()+ "\nHora inicio: " + sesion.getHoraInicio() +
                             "\nHora fin: " + sesion.getHoraFin(), Toast.LENGTH_LONG).show();
-
                  }  //--------------------//
             }
         });
@@ -220,7 +208,7 @@ public class MainActivity extends AppCompatActivity{
     private void locationStart() {
         LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Localizacion Local = new Localizacion();
-        Local.setMainActivity(this);
+        Local.setMainActivity(MainActivity.this);
         final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!gpsEnabled) {
             Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -230,11 +218,10 @@ public class MainActivity extends AppCompatActivity{
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
             return;
         }
-       mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
-       //mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
-
-        mensaje1.setText("Localizacion agregada");
-        mensaje2.setText("");
+       //mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
+       mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
+        mensaje1.setText("agregada");
+        tvUbicacion.setText("");
     }
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1000) {
@@ -253,7 +240,7 @@ public class MainActivity extends AppCompatActivity{
                         loc.getLatitude(), loc.getLongitude(), 1);
                 if (!list.isEmpty()) {
                     Address DirCalle = list.get(0);
-                    mensaje2.setText("Mi direccion es: \n"
+                    tvUbicacion.setText("Mi direccion es: \n"
                             + DirCalle.getAddressLine(0));
                 }
 
@@ -264,26 +251,28 @@ public class MainActivity extends AppCompatActivity{
     }
     public class Localizacion implements LocationListener {
         MainActivity mainActivity;
-
-        public MainActivity getMainActivity() {
-            return mainActivity;
-        }
-
-        public void setMainActivity(MainActivity mainActivity) {
-            this.mainActivity = this.mainActivity;
-        }
+        public MainActivity getMainActivity() {return mainActivity;}
+        public void setMainActivity(MainActivity mainActivity) {this.mainActivity = this.mainActivity;}
 
         @Override
         public void onLocationChanged(Location loc) {
             loc.getLatitude();
             loc.getLongitude();
 
-            String Text = "Mi ubicacion actual es: " + "\n Lat = "
-                    + loc.getLatitude() + "\n Long = " + loc.getLongitude();
-            mensaje1.setText(Text);
-            this.mainActivity.setLocation(loc);
+            //String Text = "Mi ubicacion actual es: " + "\n Lat = "
+            //        + loc.getLatitude() + "\n Long = " + loc.getLongitude();
+            mensaje1.setText(""+loc.getLongitude());
+            mensaje2.setText(""+loc.getLatitude());
+            //this.mainActivity.setLocation(loc);
         }
-
+        @Override
+        public void onProviderDisabled(String provider) {
+            mensaje1.setText("GPS Desactivado");
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+            mensaje1.setText("GPS Activado");
+        }
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             switch (status) {
@@ -298,19 +287,8 @@ public class MainActivity extends AppCompatActivity{
                     break;
             }
         }
-        @Override
-        public void onProviderEnabled(String provider) {
-            mensaje1.setText("GPS Activado");
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            mensaje1.setText("GPS Desactivado");
-        }
     }
     //--------------------
-
-
     private String getTimeString(){
         Calendar rightnow = Calendar.getInstance();
         String horah = "";
