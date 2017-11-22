@@ -1,5 +1,6 @@
 package com.mastercomp.innovacion.practicainnovacion;
 
+import android.Manifest;
 import android.animation.FloatEvaluator;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -8,12 +9,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,10 +37,12 @@ import com.mastercomp.innovacion.practicainnovacion.entidades.Usuario;
 import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
 import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity{
@@ -62,6 +74,9 @@ public class MainActivity extends AppCompatActivity{
     private boolean clickedStart = false;
 
     ScreenReceiver mReceiver;
+    //GPS
+    private TextView mensaje1;
+    private TextView mensaje2;
 
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
@@ -99,7 +114,6 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,9 +139,17 @@ public class MainActivity extends AppCompatActivity{
         }
 
         setContentView(R.layout.activity_main);
-
         txtSaludo=(TextView) findViewById(R.id.txtInicio);
         txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat(":"));
+        //GPS
+        mensaje1 = (TextView) findViewById(R.id.tvlongitud);
+        mensaje2 = (TextView) findViewById(R.id.tvlatitud);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+        } else {
+            locationStart();
+        }
+        // ---
 
         //Obtenemos los objetos de la interfaz por medio de su id
 
@@ -151,9 +173,7 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 if(!clickedStart) {
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-                   // mChronometerDistraction.stop();
-                  //  mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-                   // mChronometerDistraction.start(); // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
+                    // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
                     clickedStart = true;
                     horainicio = getTimeString();
                     Toast.makeText(MainActivity.this, "La próxima vez que se apague la pantalla se pondrá en marcha el cronómetro", Toast.LENGTH_LONG).show();
@@ -169,29 +189,6 @@ public class MainActivity extends AppCompatActivity{
                     mChronometerDistraction.stop();
                     lastPause = 0;
                     clickedStart = false;
-
-
-                    /*horafin = getTimeString();
-                    SharedPreferences sharpref=getPreferences(context.MODE_PRIVATE);
-                    horafin = getTimeString();
-                    SharedPreferences sharpref=getSharedPreferences("ArchivoSP", context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor=sharpref.edit();
-                    editor.putString("MiInte",interruptions.getText().toString());
-                    editor.putString("MiTiem",mChronometerDistraction.getText().toString());
-                    editor.putString("HIni", horainicio.toString());
-                    editor.putString("HFin", horafin.toString());
-                    editor.commit();
-                    //-----------------------------//
-
-
-                    //SE MUESTRA LA INFORMACION EN UNN TOAST
-                    String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones
-                    String tiempo=sharpref.getString("MiTiem","No hay Dato");//tiempo
-                    String hini = sharpref.getString("HIni", "No hay Dato"); //hora inicio
-                    String hfin = sharpref.getString("HFin", "No hay Dato"); //hora inicio
-                    Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+ inte +
-                            "\nTiempo Total: " + tiempo + "\nHora inicio: " + hini + "\nHora fin: " +
-                            hfin, Toast.LENGTH_LONG).show();*/
 
                     Date date= new Date();
                     sesion= new Sesion();
@@ -219,6 +216,100 @@ public class MainActivity extends AppCompatActivity{
         });
         txt = (ConstraintLayout)findViewById(R.id.ctlid);
     }
+    //GSP
+    private void locationStart() {
+        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Localizacion Local = new Localizacion();
+        Local.setMainActivity(this);
+        final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!gpsEnabled) {
+            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(settingsIntent);
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+            return;
+        }
+       mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
+       //mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
+
+        mensaje1.setText("Localizacion agregada");
+        mensaje2.setText("");
+    }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 1000) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationStart();
+                return;
+            }
+        }
+    }
+    public void setLocation(Location loc) {
+        //Obtener la direccion de la calle a partir de la latitud y la longitud
+        if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
+            try {
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> list = geocoder.getFromLocation(
+                        loc.getLatitude(), loc.getLongitude(), 1);
+                if (!list.isEmpty()) {
+                    Address DirCalle = list.get(0);
+                    mensaje2.setText("Mi direccion es: \n"
+                            + DirCalle.getAddressLine(0));
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public class Localizacion implements LocationListener {
+        MainActivity mainActivity;
+
+        public MainActivity getMainActivity() {
+            return mainActivity;
+        }
+
+        public void setMainActivity(MainActivity mainActivity) {
+            this.mainActivity = this.mainActivity;
+        }
+
+        @Override
+        public void onLocationChanged(Location loc) {
+            loc.getLatitude();
+            loc.getLongitude();
+
+            String Text = "Mi ubicacion actual es: " + "\n Lat = "
+                    + loc.getLatitude() + "\n Long = " + loc.getLongitude();
+            mensaje1.setText(Text);
+            this.mainActivity.setLocation(loc);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            switch (status) {
+                case LocationProvider.AVAILABLE:
+                    Log.d("debug", "LocationProvider.AVAILABLE");
+                    break;
+                case LocationProvider.OUT_OF_SERVICE:
+                    Log.d("debug", "LocationProvider.OUT_OF_SERVICE");
+                    break;
+                case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                    Log.d("debug", "LocationProvider.TEMPORARILY_UNAVAILABLE");
+                    break;
+            }
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+            mensaje1.setText("GPS Activado");
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            mensaje1.setText("GPS Desactivado");
+        }
+    }
+    //--------------------
+
 
     private String getTimeString(){
         Calendar rightnow = Calendar.getInstance();

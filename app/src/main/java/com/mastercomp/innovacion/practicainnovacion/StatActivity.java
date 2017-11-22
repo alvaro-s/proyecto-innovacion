@@ -132,6 +132,9 @@ public class StatActivity extends AppCompatActivity {
         int tiempoEstudioIndex;
         int interrupcionesIndex;
         int idUsuarioIndex;
+        int longitud;
+        int latitud;
+        int Ubicacion;
 
         if (cursor != null) {
             if (cursor.getColumnIndex(Constantes.CAMPO_ID_SESION) != -1) {
@@ -158,6 +161,20 @@ public class StatActivity extends AppCompatActivity {
                 interrupcionesIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_INTERRUPCIONES);
                 sesion.setInterrupciones(cursor.getInt(interrupcionesIndex));
             }
+            //GPS
+            if (cursor.getColumnIndex(Constantes.CAMPO_LONGITUD) != -1) {
+                longitud = cursor.getColumnIndexOrThrow(Constantes.CAMPO_LONGITUD);
+                sesion.setInterrupciones(cursor.getInt(longitud));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_LATITUD) != -1) {
+                latitud = cursor.getColumnIndexOrThrow(Constantes.CAMPO_LATITUD);
+                sesion.setInterrupciones(cursor.getInt(latitud));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_UBICACION) != -1) {
+                Ubicacion = cursor.getColumnIndexOrThrow(Constantes.CAMPO_UBICACION);
+                sesion.setInterrupciones(cursor.getInt(Ubicacion));
+            }
+            //----
             if (cursor.getColumnIndex(Constantes.CAMPO_ID_USUARIO) != -1) {
                 idUsuarioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_USUARIO);
                 sesion.setIdUsuario(cursor.getString(idUsuarioIndex));
