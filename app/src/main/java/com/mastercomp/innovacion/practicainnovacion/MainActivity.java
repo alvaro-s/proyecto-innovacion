@@ -218,8 +218,8 @@ public class MainActivity extends AppCompatActivity{
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
             return;
         }
-       //mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
-       mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
+       mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
+       //mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
         mensaje1.setText("agregada");
         tvUbicacion.setText("");
     }
@@ -235,14 +235,14 @@ public class MainActivity extends AppCompatActivity{
         //Obtener la direccion de la calle a partir de la latitud y la longitud
         if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
             try {
-                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 List<Address> list = geocoder.getFromLocation(
                         loc.getLatitude(), loc.getLongitude(), 1);
-                if (!list.isEmpty()) {
+                //if (!list.isEmpty()) {
                     Address DirCalle = list.get(0);
                     tvUbicacion.setText("Mi direccion es: \n"
                             + DirCalle.getAddressLine(0));
-                }
+               // }
 
             } catch (IOException e) {
                 e.printStackTrace();
