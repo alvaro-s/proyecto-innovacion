@@ -110,7 +110,12 @@ public class MainActivity extends AppCompatActivity{
                 String horaahora = getTimeString();
 
                 String [] tiempoSplit = tiempoestudio.split(":");
-                float fTiempoAprovechado = Integer.parseInt(tiempoSplit[0])*60 + Integer.parseInt(tiempoSplit[1]);
+
+                float fTiempoAprovechado = 0;
+                for(int i =0 ; i < tiempoSplit.length; i++){
+                    fTiempoAprovechado += Integer.parseInt(tiempoSplit[i])*Math.pow(60, tiempoSplit.length - 1 - i);
+                }
+
 
                 String [] hiniSplit = horainicio.split(":");
                 String [] hfinSplit = horaahora.split(":");

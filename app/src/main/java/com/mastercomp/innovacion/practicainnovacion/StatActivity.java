@@ -57,7 +57,10 @@ public class StatActivity extends AppCompatActivity {
         String inte = String.valueOf(sesion.getInterrupciones());//interrupciones
 
         String [] tiempoSplit = tiempo.split(":");
-        float fTiempoAprovechado = Integer.parseInt(tiempoSplit[0])*60 + Integer.parseInt(tiempoSplit[1]);
+        float fTiempoAprovechado = 0;
+        for(int i =0 ; i < tiempoSplit.length; i++){
+            fTiempoAprovechado += Integer.parseInt(tiempoSplit[i])*Math.pow(60, tiempoSplit.length - 1 - i);
+        }
 
         String [] hiniSplit = hini.split(":");
         String [] hfinSplit = hfin.split(":");
