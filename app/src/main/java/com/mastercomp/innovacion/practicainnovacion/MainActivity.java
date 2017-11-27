@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -102,9 +103,29 @@ public class MainActivity extends AppCompatActivity{
                 }
                 //pantalla esta apagada
             } else if(intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-
-                //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
                 if (clickedStart) {
+                ConstraintLayout view = (ConstraintLayout) findViewById(R.id.ctlid);
+
+                String tiempoestudio = mChronometerDistraction.getText().toString();
+                String horaahora = getTimeString();
+
+                String [] tiempoSplit = tiempoestudio.split(":");
+                float fTiempoAprovechado = Integer.parseInt(tiempoSplit[0])*60 + Integer.parseInt(tiempoSplit[1]);
+
+                String [] hiniSplit = horainicio.split(":");
+                String [] hfinSplit = horaahora.split(":");
+
+                float fini = Integer.parseInt(hiniSplit[0])*3600 + Integer.parseInt(hiniSplit[1])*60 + Integer.parseInt(hiniSplit[2]);
+                float ffin = Integer.parseInt(hfinSplit[0])*3600 + Integer.parseInt(hfinSplit[1])*60 + Integer.parseInt(hfinSplit[2]);
+
+                float fTiempoTotal = ffin - fini;
+
+                int blue = (int) (161 + (fTiempoAprovechado/fTiempoTotal) * 67);
+
+                int red = 389 - blue;
+                view.setBackgroundColor(Color.argb(255, red, 169, blue));
+                //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
+
                     interruptCounter++;
                     interruptions.setText("" + interruptCounter);
                     lastPause = SystemClock.elapsedRealtime();
@@ -133,6 +154,7 @@ public class MainActivity extends AppCompatActivity{
             startActivity(intentRegistro);
             finish();
         }
+
         setContentView(R.layout.activity_main);
         //GPS
         mensaje1 = (TextView) findViewById(R.id.tvlongitud);
@@ -222,6 +244,7 @@ public class MainActivity extends AppCompatActivity{
        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
         mensaje1.setText("agregada");
         tvUbicacion.setText("");
+
     }
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1000) {
