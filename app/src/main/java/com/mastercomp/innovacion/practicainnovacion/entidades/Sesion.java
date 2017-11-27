@@ -15,8 +15,13 @@ public class Sesion implements Serializable {
     private String Fecha;
     private String tiempo_estudio;
     private int interrupciones;
+    //GPS
+    private double longitud;
+    private double latitud;
+    private String Ubicacion;
+    //
 
-    public Sesion(String idSesion, String idUsuario, String horaInicio, String horaFin, String fecha, String tiempo_estudio, int interrupciones) {
+    public Sesion(String idSesion, String idUsuario, String horaInicio, String horaFin, String fecha, String tiempo_estudio, int interrupciones,double longitud,double latitud,String Ubicacion) {
         this.idSesion = idSesion;
         this.idUsuario = idUsuario;
         this.horaInicio = horaInicio;
@@ -24,6 +29,9 @@ public class Sesion implements Serializable {
         Fecha = fecha;
         this.tiempo_estudio = tiempo_estudio;
         this.interrupciones = interrupciones;
+        this.longitud=longitud;
+        this.latitud=latitud;
+        this.Ubicacion=Ubicacion;
     }
 
     public Sesion() {
@@ -84,4 +92,16 @@ public class Sesion implements Serializable {
     public void setInterrupciones(int interrupciones) {
         this.interrupciones = interrupciones;
     }
+
+    public double getLongitud() {return longitud;}
+
+    public void setLongitud(double longitud){this.longitud=longitud;}
+
+    public double getLatitud() {return latitud;}
+
+    public void setLatitud(double latitud){this.latitud=latitud;}
+
+    public String getUbicacion() {return Ubicacion;}
+
+    public void setUbicacion(String ubicacion){this.Ubicacion=Ubicacion;}
 }
