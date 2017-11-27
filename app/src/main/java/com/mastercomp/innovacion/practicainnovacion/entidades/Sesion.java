@@ -65,9 +65,7 @@ public class Sesion implements Serializable {
         return horaFin;
     }
 
-    public void setHoraFin(String horaFin) {
-        this.horaFin = horaFin;
-    }
+    public void setHoraFin(String horaFin) { this.horaFin = horaFin;}
 
     public String getFecha() {
         return Fecha;
