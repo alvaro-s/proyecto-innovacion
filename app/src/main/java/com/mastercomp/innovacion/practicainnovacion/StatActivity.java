@@ -1,11 +1,16 @@
 package com.mastercomp.innovacion.practicainnovacion;
 
-import android.content.SharedPreferences;
+import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -18,13 +23,23 @@ import com.mastercomp.innovacion.practicainnovacion.entidades.Sesion;
 import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
 import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 public class StatActivity extends AppCompatActivity {
 
     PieChart pieChart;
+    List<Sesion> listSesiones;
+    Sesion sesion;
+    Format formatterFecha = new SimpleDateFormat("yyyy-MM-dd");
+    ListView listHistorial;
+    Dialog dialog;
+    ArrayAdapter<String> adaptador;
+    Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +54,47 @@ public class StatActivity extends AppCompatActivity {
         pieChart.getDescription().setEnabled(false);
         pieChart.setEntryLabelColor(Color.BLACK);
 
-        addDataSet();
-    }
-    private void addDataSet() {
-       /* SharedPreferences sharpref=getSharedPreferences("ArchivoSP", this.MODE_PRIVATE);
-        String tiempo = sharpref.getString("MiTiem","No hay Dato");//tiempo
-        String hini = sharpref.getString("HIni", "No hay Dato"); //hora inicio
-        String hfin = sharpref.getString("HFin", "No hay Dato"); //hora inicio
-        String inte=sharpref.getString("MiInte","No hay Dato");//interrupciones*/
+        listSesiones= consultarSesiones();
+        addDataSet(listSesiones.get(listSesiones.size()-1));
 
-        List<Sesion> listSesiones= consultarSesiones();//lista de sesiones gurdadas en la base
-        Sesion sesion=listSesiones.get(listSesiones.size()-1);//Toma de la lista el último registro
+        //Lista para manejar el historial de sesiones almacenadas en la bdd
+        Button btnHistorial = (Button) findViewById(R.id.btnHistorial);
+        dialog = new Dialog(StatActivity.this);
+        dialog.setContentView(R.layout.pop_historial);
+        dialog.setTitle("Historial de sesiones");
+        listHistorial= (ListView) dialog.findViewById(R.id.listHistorial);
+        adaptador = new ArrayAdapter<>(StatActivity.this,
+                android.R.layout.simple_list_item_1);
+
+        for(int i = 0; i < listSesiones.size(); i++)
+        {
+            sesion = listSesiones.get(i);
+            date= new Date(sesion.getFecha());
+            adaptador.add("Sesión: "+formatterFecha.format(date));
+        }
+        listHistorial.setAdapter(adaptador);
+
+        listHistorial.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.hide();
+                sesion = listSesiones.get(position);
+                TextView titulo = (TextView) findViewById(R.id.txtTitulo);
+                date= new Date(sesion.getFecha());
+                titulo.setText("SESIÓN: "+formatterFecha.format(date));
+                addDataSet(sesion);
+            }
+        });
+
+        btnHistorial.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                dialog.show();
+            }
+        });
+
+
+    }
+    private void addDataSet(Sesion sesion) {
 
         String tiempo = sesion.getTiempo_estudio();//tiempo
         String hini = sesion.getHoraInicio(); //hora inicio
@@ -73,8 +118,14 @@ public class StatActivity extends AppCompatActivity {
         String[] xData = new String[]{"Tiempo aprovechado", "Tiempo perdido"};
         float[] yData = {(fTiempoAprovechado/fTiempoTotal) * 100, (1-(fTiempoAprovechado/fTiempoTotal)) * 100};
 
-        TextView interruptions = (TextView) findViewById(R.id.interruptCounter2);
-        interruptions.setText(inte);
+        TextView interruptions = (TextView) findViewById(R.id.txtInterrupciones);
+        TextView txtHoraInicio = (TextView) findViewById(R.id.txtHoraInicial);
+        TextView txtHoraFinal = (TextView) findViewById(R.id.txtHoraFinal);
+
+        interruptions.setText("Interrupciones :" + inte);
+        txtHoraInicio.setText("Hora Inicial: " + hini);
+        txtHoraFinal.setText("Hora Final: " + hfin);
+
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
 
         for (int i = 0; i < yData.length; i++){
