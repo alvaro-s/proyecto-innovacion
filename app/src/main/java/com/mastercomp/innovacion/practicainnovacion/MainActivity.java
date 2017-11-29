@@ -217,6 +217,10 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
+                    //GPS
+                    sesion.setLongitud(Double.parseDouble(mensaje1.getText().toString()));
+                    sesion.setLatitud(Double.parseDouble(mensaje2.getText().toString()));
+                    sesion.setUbicacion(tvUbicacion.getText().toString());
 
                     crearSesion(sesion);
 
@@ -377,6 +381,11 @@ public class MainActivity extends AppCompatActivity{
         values.put(Constantes.CAMPO_INTERRUPCIONES, sesion.getInterrupciones());
         values.put(Constantes.CAMPO_ID_USUARIO, sesion.getIdUsuario());
         values.put(Constantes.CAMPO_TIEMPO_ESTUDIO, sesion.getTiempo_estudio());
+        //GPS
+        values.put(Constantes.CAMPO_LONGITUD,sesion.getLongitud());
+        values.put(Constantes.CAMPO_LATITUD,sesion.getLatitud());
+        values.put(Constantes.CAMPO_UBICACION,sesion.getUbicacion());
+
 
         db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
         db.close();
