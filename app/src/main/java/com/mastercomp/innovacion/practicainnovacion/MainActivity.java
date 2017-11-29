@@ -218,8 +218,8 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
                     //GPS
-                    sesion.setLongitud(Double.parseDouble(mensaje1.getText().toString()));
-                    sesion.setLatitud(Double.parseDouble(mensaje2.getText().toString()));
+                    sesion.setLongitud(mensaje1.getText().toString());
+                    sesion.setLatitud(mensaje2.getText().toString());
                     sesion.setUbicacion(tvUbicacion.getText().toString());
 
                     crearSesion(sesion);
@@ -376,11 +376,12 @@ public class MainActivity extends AppCompatActivity{
         ContentValues values=new ContentValues();
         values.put(Constantes.CAMPO_ID_SESION, sesion.getIdSesion());
         values.put(Constantes.CAMPO_FECHA, sesion.getFecha());
-        values.put(Constantes.CAMPO_HORA_FIN, sesion.getHoraFin());
         values.put(Constantes.CAMPO_HORA_INICIO, sesion.getHoraInicio());
+        values.put(Constantes.CAMPO_HORA_FIN, sesion.getHoraFin());
+        values.put(Constantes.CAMPO_TIEMPO_ESTUDIO, sesion.getTiempo_estudio());
         values.put(Constantes.CAMPO_INTERRUPCIONES, sesion.getInterrupciones());
         values.put(Constantes.CAMPO_ID_USUARIO, sesion.getIdUsuario());
-        values.put(Constantes.CAMPO_TIEMPO_ESTUDIO, sesion.getTiempo_estudio());
+
         //GPS
         values.put(Constantes.CAMPO_LONGITUD,sesion.getLongitud());
         values.put(Constantes.CAMPO_LATITUD,sesion.getLatitud());

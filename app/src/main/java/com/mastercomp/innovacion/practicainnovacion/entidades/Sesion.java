@@ -16,12 +16,12 @@ public class Sesion implements Serializable {
     private String tiempo_estudio;
     private int interrupciones;
     //GPS
-    private double longitud;
-    private double latitud;
+    private String longitud;
+    private String latitud;
     private String Ubicacion;
     //
 
-    public Sesion(String idSesion, String idUsuario, String horaInicio, String horaFin, String fecha, String tiempo_estudio, int interrupciones,double longitud,double latitud,String Ubicacion) {
+    public Sesion(String idSesion, String idUsuario, String horaInicio, String horaFin, String fecha, String tiempo_estudio, int interrupciones,String longitud,String latitud,String Ubicacion) {
         this.idSesion = idSesion;
         this.idUsuario = idUsuario;
         this.horaInicio = horaInicio;
@@ -91,13 +91,13 @@ public class Sesion implements Serializable {
         this.interrupciones = interrupciones;
     }
 
-    public double getLongitud() {return longitud;}
+    public String getLongitud() {return longitud;}
 
-    public void setLongitud(double longitud){this.longitud=longitud;}
+    public void setLongitud(String longitud){this.longitud=longitud;}
 
-    public double getLatitud() {return latitud;}
+    public String getLatitud() {return latitud;}
 
-    public void setLatitud(double latitud){this.latitud=latitud;}
+    public void setLatitud(String latitud){this.latitud=latitud;}
 
     public String getUbicacion() {return Ubicacion;}
 
