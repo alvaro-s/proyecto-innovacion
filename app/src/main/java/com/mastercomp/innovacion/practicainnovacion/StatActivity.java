@@ -40,6 +40,7 @@ public class StatActivity extends AppCompatActivity {
     Dialog dialog;
     ArrayAdapter<String> adaptador;
     Date date;
+    String time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,8 @@ public class StatActivity extends AppCompatActivity {
         {
             sesion = listSesiones.get(i);
             date= new Date(sesion.getFecha());
-            adaptador.add("Sesión: "+formatterFecha.format(date));
+            time = sesion.getHoraFin();
+            adaptador.add("Sesión: "+formatterFecha.format(date) + " - " + time);
         }
         listHistorial.setAdapter(adaptador);
 
