@@ -101,5 +101,5 @@ public class Sesion implements Serializable {
 
     public String getUbicacion() {return Ubicacion;}
 
-    public void setUbicacion(String ubicacion){this.Ubicacion=Ubicacion;}
+    public void setUbicacion(String Ubicacion){this.Ubicacion=Ubicacion;}
 }

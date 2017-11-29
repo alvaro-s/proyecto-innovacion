@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
+
                     crearSesion(sesion);
 
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
@@ -266,11 +267,10 @@ public class MainActivity extends AppCompatActivity{
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 List<Address> list = geocoder.getFromLocation(
                         loc.getLatitude(), loc.getLongitude(), 1);
-                //if (!list.isEmpty()) {
+                if (!list.isEmpty()) {
                     Address DirCalle = list.get(0);
-                    tvUbicacion.setText("Mi direccion es: \n"
-                            + DirCalle.getAddressLine(0));
-               // }
+                    tvUbicacion.setText(DirCalle.getAddressLine(0));
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -281,17 +281,15 @@ public class MainActivity extends AppCompatActivity{
         MainActivity mainActivity;
         public MainActivity getMainActivity() {return mainActivity;}
         public void setMainActivity(MainActivity mainActivity) {this.mainActivity = this.mainActivity;}
-
         @Override
         public void onLocationChanged(Location loc) {
             loc.getLatitude();
             loc.getLongitude();
-
             //String Text = "Mi ubicacion actual es: " + "\n Lat = "
             //        + loc.getLatitude() + "\n Long = " + loc.getLongitude();
             mensaje1.setText(""+loc.getLongitude());
             mensaje2.setText(""+loc.getLatitude());
-            //this.mainActivity.setLocation(loc);
+            setLocation(loc);
         }
         @Override
         public void onProviderDisabled(String provider) {
