@@ -39,7 +39,7 @@ public class StatActivity extends AppCompatActivity {
     ListView listHistorial;
     Dialog dialog;
     ArrayAdapter<String> adaptador;
-    Date date;
+    String date;
     String time;
 
     @Override
@@ -70,9 +70,9 @@ public class StatActivity extends AppCompatActivity {
         for(int i = 0; i < listSesiones.size(); i++)
         {
             sesion = listSesiones.get(i);
-            date= new Date(sesion.getFecha());
+            date = sesion.getFecha();
             time = sesion.getHoraFin();
-            adaptador.add("Sesión: "+formatterFecha.format(date) + " - " + time);
+            adaptador.add("Sesión: "+ date + " - " + time);
         }
         listHistorial.setAdapter(adaptador);
 
@@ -82,8 +82,8 @@ public class StatActivity extends AppCompatActivity {
                 dialog.hide();
                 sesion = listSesiones.get(position);
                 TextView titulo = (TextView) findViewById(R.id.txtTitulo);
-                date= new Date(sesion.getFecha());
-                titulo.setText("SESIÓN: "+formatterFecha.format(date));
+                date = sesion.getFecha();
+                titulo.setText("SESIÓN: " + date);
                 addDataSet(sesion);
             }
         });
