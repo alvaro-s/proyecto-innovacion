@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity{
     private TextView tvUbicacion;
 
     private String[] xData = {"Tiempo Perdido", "Tiempo Aprovechado"};
-    PieChart pieChart;
+   // PieChart pieChart;
 
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
@@ -201,15 +201,15 @@ public class MainActivity extends AppCompatActivity{
         mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
         mChronometer= (Chronometer) findViewById(R.id.crono2);
 
-        pieChart = (PieChart) findViewById(R.id.idPieChart);
+        /*pieChart = (PieChart) findViewById(R.id.idPieChart);
         pieChart.setRotationEnabled(true);
         pieChart.setHoleRadius(25f);
         pieChart.setDrawEntryLabels(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setEntryLabelColor(Color.BLACK);
-        pieChart.setHoleColor(Color.parseColor("#00A2FF"));
+        pieChart.setHoleColor(Color.parseColor("#00A2FF"));*/
 
-        addDataSet();
+        //addDataSet();
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         //crear y actualizar el pie chart
-        addDataSet();
+        //addDataSet();
 
     }
 
@@ -429,7 +429,7 @@ public class MainActivity extends AppCompatActivity{
         db.close();
     }
     //toda esta mierda es para el piechart
-    private void addDataSet() {
+   /* private void addDataSet() {
         float timeElapsed;
         float timeElapsed2;
 
@@ -473,5 +473,5 @@ public class MainActivity extends AppCompatActivity{
         pieData.setValueFormatter(new PercentFormatter());
         pieChart.setData(pieData);
         pieChart.invalidate();
-    }
+    }*/
 }

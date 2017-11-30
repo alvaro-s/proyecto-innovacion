@@ -6,21 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00A2FF"
-    tools:context="com.mastercomp.innovacion.practicainnovacion.MainActivity"
-    >
+    tools:context="com.mastercomp.innovacion.practicainnovacion.MainActivity">
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/idPieChart"
-        android:layout_width="273dp"
-        android:layout_height="207dp"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.563">
-
-    </com.github.mikephil.charting.charts.PieChart>
 
     <Chronometer
         android:id="@+id/crono"
@@ -41,10 +28,10 @@
 
     <Button
         android:id="@+id/startButton"
-        android:layout_width="110dp"
-        android:layout_height="60dp"
+        android:layout_width="108dp"
+        android:layout_height="41dp"
         android:layout_below="@+id/idPieChart"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="84dp"
         android:layout_toEndOf="@+id/textView5"
         android:layout_toRightOf="@+id/textView5"
@@ -62,11 +49,11 @@
 
     <Button
         android:id="@+id/pauseButton"
-        android:layout_width="110dp"
-        android:layout_height="60dp"
+        android:layout_width="108dp"
+        android:layout_height="41dp"
         android:layout_alignBaseline="@+id/startButton"
         android:layout_alignBottom="@+id/startButton"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="60dp"
         android:layout_toEndOf="@+id/txtInicio"
         android:layout_toRightOf="@+id/txtInicio"
         android:background="@android:color/darker_gray"
@@ -74,30 +61,31 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.282"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/startButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.838"
+        app:layout_constraintVertical_bias="0.836"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/txtInicio"
-        android:layout_width="192dp"
-        android:layout_height="45dp"
+        android:layout_width="358dp"
+        android:layout_height="30dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:gravity="center"
         android:text="Hola "
         android:textColor="@android:color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.113"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.017" />
+        app:layout_constraintVertical_bias="0.034" />
 
     <Button
         android:id="@+id/statbutton"
@@ -113,10 +101,10 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.463"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.982" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/tvlongitud"
@@ -151,18 +139,19 @@
 
     <TextView
         android:id="@+id/tvUbicacion"
-        android:layout_width="262dp"
-        android:layout_height="25dp"
+        android:layout_width="348dp"
+        android:layout_height="33dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="52dp"
         android:enabled="false"
+        android:gravity="center"
         android:text="Ubicacion"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.628"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.004"
@@ -270,5 +259,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.158" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="347dp"
+        android:layout_height="192dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.601"
+        app:srcCompat="@mipmap/logo1" />
 
 </android.support.constraint.ConstraintLayout>
