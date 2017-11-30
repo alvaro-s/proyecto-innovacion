@@ -70,9 +70,9 @@ public class StatActivity extends AppCompatActivity {
         for(int i = 0; i < listSesiones.size(); i++)
         {
             sesion = listSesiones.get(i);
-            date = sesion.getFecha();
-            time = sesion.getHoraFin();
-            adaptador.add("Sesión: "+ date + " - " + time);
+            date= sesion.getFecha();
+            time = sesion.getHoraInicio();
+            adaptador.add("Sesión: " + date + " - " + time);
         }
         listHistorial.setAdapter(adaptador);
 
@@ -83,7 +83,7 @@ public class StatActivity extends AppCompatActivity {
                 sesion = listSesiones.get(position);
                 TextView titulo = (TextView) findViewById(R.id.txtTitulo);
                 date = sesion.getFecha();
-                titulo.setText("SESIÓN: " + date);
+                titulo.setText("SESIÓN: "+ date);
                 addDataSet(sesion);
             }
         });
@@ -102,6 +102,7 @@ public class StatActivity extends AppCompatActivity {
         String hini = sesion.getHoraInicio(); //hora inicio
         String hfin = sesion.getHoraFin(); //hora inicio
         String inte = String.valueOf(sesion.getInterrupciones());//interrupciones
+        String ubi=sesion.getUbicacion();//ubicacion
 
         String [] tiempoSplit = tiempo.split(":");
         float fTiempoAprovechado = 0;
@@ -123,8 +124,10 @@ public class StatActivity extends AppCompatActivity {
         TextView interruptions = (TextView) findViewById(R.id.txtInterrupciones);
         TextView txtHoraInicio = (TextView) findViewById(R.id.txtHoraInicial);
         TextView txtHoraFinal = (TextView) findViewById(R.id.txtHoraFinal);
+        TextView txtUbicacion=(TextView) findViewById(R.id.txtUbicacion);
 
-        interruptions.setText("Interrupciones :" + inte);
+        txtUbicacion.setText(ubi);
+        interruptions.setText("Interrupciones: " + inte);
         txtHoraInicio.setText("Hora Inicial: " + hini);
         txtHoraFinal.setText("Hora Final: " + hfin);
 
@@ -188,9 +191,9 @@ public class StatActivity extends AppCompatActivity {
         int tiempoEstudioIndex;
         int interrupcionesIndex;
         int idUsuarioIndex;
-        int longitud;
-        int latitud;
-        int Ubicacion;
+        int longitudIndex;
+        int latitudIndex;
+        int UbicacionIndex;
 
         if (cursor != null) {
             if (cursor.getColumnIndex(Constantes.CAMPO_ID_SESION) != -1) {
@@ -217,25 +220,24 @@ public class StatActivity extends AppCompatActivity {
                 interrupcionesIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_INTERRUPCIONES);
                 sesion.setInterrupciones(cursor.getInt(interrupcionesIndex));
             }
-            //GPS
-            if (cursor.getColumnIndex(Constantes.CAMPO_LONGITUD) != -1) {
-                longitud = cursor.getColumnIndexOrThrow(Constantes.CAMPO_LONGITUD);
-                sesion.setInterrupciones(cursor.getInt(longitud));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_LATITUD) != -1) {
-                latitud = cursor.getColumnIndexOrThrow(Constantes.CAMPO_LATITUD);
-                sesion.setInterrupciones(cursor.getInt(latitud));
-            }
-            if (cursor.getColumnIndex(Constantes.CAMPO_UBICACION) != -1) {
-                Ubicacion = cursor.getColumnIndexOrThrow(Constantes.CAMPO_UBICACION);
-                sesion.setInterrupciones(cursor.getInt(Ubicacion));
-            }
-            //----
             if (cursor.getColumnIndex(Constantes.CAMPO_ID_USUARIO) != -1) {
                 idUsuarioIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_ID_USUARIO);
                 sesion.setIdUsuario(cursor.getString(idUsuarioIndex));
             }
-
+            //GPS
+            if (cursor.getColumnIndex(Constantes.CAMPO_LONGITUD) != -1) {
+                longitudIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_LONGITUD);
+                sesion.setLongitud(cursor.getString(longitudIndex));
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_LATITUD) != -1) {
+                latitudIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_LATITUD);
+                sesion.setLatitud(cursor.getString(latitudIndex));//probar
+            }
+            if (cursor.getColumnIndex(Constantes.CAMPO_UBICACION) != -1) {
+                UbicacionIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_UBICACION);
+                sesion.setUbicacion(cursor.getString(UbicacionIndex));
+            }
+            //----
         }
         return sesion;
     }

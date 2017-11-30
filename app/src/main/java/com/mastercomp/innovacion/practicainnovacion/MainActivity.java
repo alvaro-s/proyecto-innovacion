@@ -217,6 +217,11 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
+                    //GPS
+                    sesion.setLongitud(mensaje1.getText().toString());
+                    sesion.setLatitud(mensaje2.getText().toString());
+                    sesion.setUbicacion(tvUbicacion.getText().toString());
+
                     crearSesion(sesion);
 
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
@@ -245,8 +250,8 @@ public class MainActivity extends AppCompatActivity{
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
             return;
         }
-       //mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
-       mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
+       mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
+       //mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
         mensaje1.setText("agregada");
         tvUbicacion.setText("");
 
@@ -266,11 +271,10 @@ public class MainActivity extends AppCompatActivity{
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 List<Address> list = geocoder.getFromLocation(
                         loc.getLatitude(), loc.getLongitude(), 1);
-                //if (!list.isEmpty()) {
+                if (!list.isEmpty()) {
                     Address DirCalle = list.get(0);
-                    tvUbicacion.setText("Mi direccion es: \n"
-                            + DirCalle.getAddressLine(0));
-               // }
+                    tvUbicacion.setText(DirCalle.getAddressLine(0));
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -281,17 +285,15 @@ public class MainActivity extends AppCompatActivity{
         MainActivity mainActivity;
         public MainActivity getMainActivity() {return mainActivity;}
         public void setMainActivity(MainActivity mainActivity) {this.mainActivity = this.mainActivity;}
-
         @Override
         public void onLocationChanged(Location loc) {
             loc.getLatitude();
             loc.getLongitude();
-
             //String Text = "Mi ubicacion actual es: " + "\n Lat = "
             //        + loc.getLatitude() + "\n Long = " + loc.getLongitude();
             mensaje1.setText(""+loc.getLongitude());
             mensaje2.setText(""+loc.getLatitude());
-            //this.mainActivity.setLocation(loc);
+            setLocation(loc);
         }
         @Override
         public void onProviderDisabled(String provider) {
@@ -374,11 +376,17 @@ public class MainActivity extends AppCompatActivity{
         ContentValues values=new ContentValues();
         values.put(Constantes.CAMPO_ID_SESION, sesion.getIdSesion());
         values.put(Constantes.CAMPO_FECHA, sesion.getFecha());
-        values.put(Constantes.CAMPO_HORA_FIN, sesion.getHoraFin());
         values.put(Constantes.CAMPO_HORA_INICIO, sesion.getHoraInicio());
+        values.put(Constantes.CAMPO_HORA_FIN, sesion.getHoraFin());
+        values.put(Constantes.CAMPO_TIEMPO_ESTUDIO, sesion.getTiempo_estudio());
         values.put(Constantes.CAMPO_INTERRUPCIONES, sesion.getInterrupciones());
         values.put(Constantes.CAMPO_ID_USUARIO, sesion.getIdUsuario());
-        values.put(Constantes.CAMPO_TIEMPO_ESTUDIO, sesion.getTiempo_estudio());
+
+        //GPS
+        values.put(Constantes.CAMPO_LONGITUD,sesion.getLongitud());
+        values.put(Constantes.CAMPO_LATITUD,sesion.getLatitud());
+        values.put(Constantes.CAMPO_UBICACION,sesion.getUbicacion());
+
 
         db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
         db.close();
