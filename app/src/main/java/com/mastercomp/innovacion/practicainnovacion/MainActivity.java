@@ -208,12 +208,12 @@ public class MainActivity extends AppCompatActivity{
                     mChronometerDistraction.stop();
                     lastPause = 0;
                     clickedStart = false;
-                    Date date= new Date();
+                    Calendar cal = Calendar.getInstance();
                     sesion= new Sesion();
                     sesion.setIdSesion(UUID.randomUUID().toString());
                     sesion.setIdUsuario(usuario.getIdUsuario());
                     sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString()));
-                    sesion.setFecha(date.toString());
+                    sesion.setFecha(cal.get(Calendar.YEAR) + "-" + String.format("%02d", cal.get(Calendar.MONTH ) + 1) + "-" + String.format("%02d", cal.get(Calendar.DAY_OF_MONTH ) + 1)) ;
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
