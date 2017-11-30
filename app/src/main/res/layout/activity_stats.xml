@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mastercomp.innovacion.practicainnovacion.StatActivity">
+    tools:context="com.mastercomp.innovacion.practicainnovacion.StatActivity"
+    android:background="#00A2FF">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/idPieChart"
@@ -14,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.584">
+        app:layout_constraintVertical_bias="0.584"
+        >
 
     </com.github.mikephil.charting.charts.PieChart>
 
@@ -28,6 +30,7 @@
         android:layout_marginTop="8dp"
         android:text="Interrupciones: "
         android:textAlignment="center"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/idPieChart"
@@ -45,11 +48,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"
         android:text="ESTADÍSTICAS ÚLTIMA SESIÓN"
-
         android:textAlignment="center"
+
+        android:textColor="@android:color/white"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/idPieChart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.428"
@@ -61,7 +65,9 @@
         android:id="@+id/btnHistorial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="Historial"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
@@ -74,6 +80,7 @@
         android:layout_width="148dp"
         android:layout_height="21dp"
         android:text=""
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.136"
@@ -86,6 +93,7 @@
         android:layout_width="149dp"
         android:layout_height="21dp"
         android:text=""
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.862"

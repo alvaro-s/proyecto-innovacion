@@ -24,6 +24,7 @@ public class RegistroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Registro");
         setContentView(R.layout.activity_registro);
         btnContinuar = (Button) findViewById(R.id.btnContinuar);
         txtNombre = (EditText) findViewById(R.id.txtNombre);
