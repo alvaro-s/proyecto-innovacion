@@ -45,7 +45,7 @@ public class StatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
-
+        getSupportActionBar().setTitle("Estadísticas");
         //estas son caracteristicas del piechart
         pieChart = (PieChart) findViewById(R.id.idPieChart);
         pieChart.setRotationEnabled(true);
@@ -53,6 +53,7 @@ public class StatActivity extends AppCompatActivity {
         pieChart.setDrawEntryLabels(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setHoleColor(Color.parseColor("#00A2FF"));
 
         listSesiones= consultarSesiones();
         addDataSet(listSesiones.get(listSesiones.size()-1));
@@ -140,8 +141,9 @@ public class StatActivity extends AppCompatActivity {
         pieDataSet.setValueTextColor(Color.BLACK);
 
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.GREEN);
-        colors.add(Color.RED);
+        colors.add(Color.parseColor("#42f477"));
+        colors.add(Color.parseColor("#F6546A"));
+
         pieDataSet.setColors(colors);
 
         //create pie legend to chart

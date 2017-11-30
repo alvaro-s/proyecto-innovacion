@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mastercomp.innovacion.practicainnovacion.RegistroActivity">
+    tools:context="com.mastercomp.innovacion.practicainnovacion.RegistroActivity"
+    android:background="#00A2FF"
+    tools:ignore="ExtraText"
+    >
 
 
     <Button
@@ -14,45 +17,71 @@
         android:text="Siguiente"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.931"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.599" />
+        app:layout_constraintVertical_bias="0.498"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/white"/>
+    />
 
     <EditText
         android:id="@+id/txtNombre"
-        android:layout_width="368dp"
+        android:layout_width="340dp"
+
         android:layout_height="47dp"
-        android:ems="10"
         android:hint="Tu nombre"
         android:inputType="textPersonName"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textColorLink="@android:color/holo_green_light"
         app:layout_constraintBottom_toTopOf="@+id/txtApellido"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/txtTitle"
+        android:backgroundTint="@android:color/white"/>
+    />
 
     <EditText
         android:id="@+id/txtApellido"
-        android:layout_width="368dp"
+        android:layout_width="339dp"
         android:layout_height="46dp"
         android:ems="10"
         android:hint="Tu apellido"
         android:inputType="textPersonName"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textColorLink="@android:color/holo_green_light"
         app:layout_constraintBottom_toTopOf="@+id/btnContinuar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtNombre" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNombre"
+        android:backgroundTint="@android:color/white"/>
 
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Solo algo antes de empezar..."
+        android:textColor="@android:color/white"
         android:textSize="18.0dp"
         app:layout_constraintBottom_toTopOf="@+id/txtNombre"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="217dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@mipmap/logo1"
+        tools:layout_editor_absoluteX="0dp" />
+
 
 </android.support.constraint.ConstraintLayout>
