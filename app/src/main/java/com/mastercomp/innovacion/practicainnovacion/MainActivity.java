@@ -37,12 +37,12 @@ import com.mastercomp.innovacion.practicainnovacion.entidades.Sesion;
 import com.mastercomp.innovacion.practicainnovacion.entidades.Usuario;
 import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
 import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
+//1import com.github.mikephil.charting.charts.PieChart;
+//import com.github.mikephil.charting.components.Legend;
+//import com.github.mikephil.charting.data.PieData;
+//import com.github.mikephil.charting.data.PieDataSet;
+//import com.github.mikephil.charting.data.PieEntry;
+//1import com.github.mikephil.charting.formatter.PercentFormatter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity{
     private Button statButton;                                  //botón de estadísticas
     private TextView interruptions;                             //contador de interrupciones
     private Chronometer mChronometerDistraction; // este es el cronometro que contara el tiempo de distraccion
-    private Chronometer mChronometer;
+    //private Chronometer mChronometer;//2
     private TextView txtSaludo;
 
     private Usuario usuario;
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity{
     private TextView mensaje2;
     private TextView tvUbicacion;
 
-    private String[] xData = {"Tiempo Perdido", "Tiempo Aprovechado"};
-   // PieChart pieChart;
+//  3  private String[] xData = {"Tiempo Perdido", "Tiempo Aprovechado"};
+//   // PieChart pieChart;
 
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity{
                 if (clickedStart) {
                     if(lastPause == 0){
                         mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-
                     }
                     else {
                         long intervalOnPause = (SystemClock.elapsedRealtime() - lastPause);
@@ -138,11 +137,11 @@ public class MainActivity extends AppCompatActivity{
                 int blue = (int) (161 + (fTiempoAprovechado/fTiempoTotal) * 67);
 
                 int red = 389 - blue;
-                //view.setBackgroundColor(Color.argb(255, red, 169, blue));
+                view.setBackgroundColor(Color.argb(255, red, 169, blue));
                 //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
 
                     interruptCounter++;
-                    interruptions.setText("Interrupciones: " + interruptCounter);
+                    interruptions.setText("" + interruptCounter);
                     lastPause = SystemClock.elapsedRealtime();
                     mChronometerDistraction.stop();
 
@@ -152,9 +151,8 @@ public class MainActivity extends AppCompatActivity{
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Distraction Timer");
+        //4getSupportActionBar().setTitle("Distraction Timer");
         clickedStart = false;
         //GUARDAR ARCHIVO
         final Context context=this;//crear una variable context para guaradr los datos
@@ -185,11 +183,11 @@ public class MainActivity extends AppCompatActivity{
         }
         // ---
         txtSaludo=(TextView) findViewById(R.id.txtInicio);
-        txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat("!"));
+        txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat(":"));
 
         //Obtenemos los objetos de la interfaz por medio de su id
         interruptions = (TextView) findViewById(R.id.interruptCounter);
-        interruptions.setText("Interrupciones: 0");
+        //5interruptions.setText("Interrupciones: 0");
         statButton = (Button) findViewById(R.id.statbutton);
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         statButton.setOnClickListener(new View.OnClickListener() {
@@ -200,24 +198,24 @@ public class MainActivity extends AppCompatActivity{
         });
         startButton = (Button) findViewById(R.id.startButton);
         mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
-        mChronometer= (Chronometer) findViewById(R.id.crono2);
-
-        /*pieChart = (PieChart) findViewById(R.id.idPieChart);
-        pieChart.setRotationEnabled(true);
-        pieChart.setHoleRadius(25f);
-        pieChart.setDrawEntryLabels(true);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setEntryLabelColor(Color.BLACK);
-        pieChart.setHoleColor(Color.parseColor("#00A2FF"));*/
-
-        //addDataSet();
+//        6mChronometer= (Chronometer) findViewById(R.id.crono2);
+//
+//        /*pieChart = (PieChart) findViewById(R.id.idPieChart);
+//        pieChart.setRotationEnabled(true);
+//        pieChart.setHoleRadius(25f);
+//        pieChart.setDrawEntryLabels(true);
+//        pieChart.getDescription().setEnabled(false);
+//        pieChart.setEntryLabelColor(Color.BLACK);
+//        pieChart.setHoleColor(Color.parseColor("#00A2FF"));*/
+//
+//        6//addDataSet();
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if(!clickedStart) {
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-                    mChronometer.setBase(SystemClock.elapsedRealtime());
-                    mChronometer.start();
+//                    7mChronometer.setBase(SystemClock.elapsedRealtime());
+//                    7mChronometer.start();
                     // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
                     clickedStart = true;
                     horainicio = getTimeString();
@@ -232,15 +230,15 @@ public class MainActivity extends AppCompatActivity{
                 //SE GUARDA LA INFORMACION DE LAS INTERRUPCINES Y EL TIEMPO
                 if(clickedStart) {
                     mChronometerDistraction.stop();
-                    mChronometer.stop();
+                   //8 mChronometer.stop();
                     lastPause = 0;
                     clickedStart = false;
-                    Date date= new Date();
+                    Calendar cal = Calendar.getInstance();
                     sesion= new Sesion();
                     sesion.setIdSesion(UUID.randomUUID().toString());
                     sesion.setIdUsuario(usuario.getIdUsuario());
-                    sesion.setInterrupciones(interruptCounter);
-                    sesion.setFecha(date.toString());
+                    sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString()));
+                    sesion.setFecha(cal.get(Calendar.YEAR) + "-" + String.format("%02d", cal.get(Calendar.MONTH ) + 1) + "-" + String.format("%02d", cal.get(Calendar.DAY_OF_MONTH ) + 1)) ;
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
                     sesion.setHoraFin(getTimeString());
@@ -251,14 +249,14 @@ public class MainActivity extends AppCompatActivity{
 
                     crearSesion(sesion);
 
-                    System.out.println();
+                    //9System.out.println();
 
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-                    mChronometer.setBase(SystemClock.elapsedRealtime());
+                    //10mChronometer.setBase(SystemClock.elapsedRealtime());
                     interruptCounter = 0;
-                    interruptions.setText("Interrupciones: 0");
+                    interruptions.setText("0");
                     Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+
-                            sesion.getInterrupciones() + "\nTiempo Aprovechado: " +
+                            sesion.getInterrupciones() + "\nTiempo Total: " +
                             sesion.getTiempo_estudio()+ "\nHora inicio: " + sesion.getHoraInicio() +
                             "\nHora fin: " + sesion.getHoraFin(), Toast.LENGTH_LONG).show();
                  }  //--------------------//
@@ -267,12 +265,12 @@ public class MainActivity extends AppCompatActivity{
         txt = (ConstraintLayout)findViewById(R.id.ctlid);
     }
 
-    protected void onResume() {
-        super.onResume();
-        //crear y actualizar el pie chart
-        //addDataSet();
-
-    }
+//11    protected void onResume() {
+//        super.onResume();
+//        //crear y actualizar el pie chart
+//        //addDataSet();
+//
+// 11   }
 
     //GSP
     private void locationStart() {
@@ -429,50 +427,5 @@ public class MainActivity extends AppCompatActivity{
         db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
         db.close();
     }
-    //toda esta mierda es para el piechart
-   /* private void addDataSet() {
-        float timeElapsed;
-        float timeElapsed2;
 
-        if(clickedStart){
-            timeElapsed = (SystemClock.elapsedRealtime() - mChronometer.getBase());
-            timeElapsed2 = (SystemClock.elapsedRealtime() - mChronometerDistraction.getBase());
-        }else {
-            timeElapsed = 10;
-            timeElapsed2 = 5;
-        }
-
-        //aqui asigno los porcentajes de concentracion y distraccion para el pie chart basado en los cronometros
-        float[] yData = {(1-(timeElapsed2/timeElapsed)) * 100, ((timeElapsed2/timeElapsed)) * 100};
-
-        ArrayList<PieEntry> pieEntries = new ArrayList<>();
-
-        for (int i = 0; i < yData.length; i++){
-            pieEntries.add(new PieEntry(yData[i], xData[i]));
-
-        }
-
-        //create the data set
-        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
-        pieDataSet.setSliceSpace(2);
-        pieDataSet.setValueTextSize(12);
-        pieDataSet.setValueTextColor(Color.BLACK);
-
-        //add colors to dataset
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor("#F6546A"));
-        colors.add(Color.parseColor("#42f477"));
-        pieDataSet.setColors(colors);
-
-        //create pie legend to chart
-        Legend legend = pieChart.getLegend();
-        legend.setForm(Legend.LegendForm.CIRCLE);
-
-
-        //create pie data object
-        PieData pieData = new PieData(pieDataSet);
-        pieData.setValueFormatter(new PercentFormatter());
-        pieChart.setData(pieData);
-        pieChart.invalidate();
-    }*/
 }
