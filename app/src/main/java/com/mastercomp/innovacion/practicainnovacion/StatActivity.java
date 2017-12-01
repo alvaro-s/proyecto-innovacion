@@ -57,6 +57,7 @@ public class StatActivity extends AppCompatActivity {
         pieChart.setHoleColor(Color.parseColor("#00A2FF"));
 
         listSesiones= consultarSesiones();
+        if(listSesiones.size() == 0) return;
         addDataSet(listSesiones.get(listSesiones.size()-1));
 
         //Lista para manejar el historial de sesiones almacenadas en la bdd

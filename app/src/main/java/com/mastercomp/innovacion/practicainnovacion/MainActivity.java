@@ -129,10 +129,10 @@ public class MainActivity extends AppCompatActivity{
 
                 float fTiempoTotal = ffin - fini;
 
-                int blue = (int) (161 + (fTiempoAprovechado/fTiempoTotal) * 67);
-
-                int red = 389 - blue;
-                view.setBackgroundColor(Color.argb(255, red, 169, blue));
+                int blue = (int) (60 + (fTiempoAprovechado/fTiempoTotal) * 195);
+                int green = (int) ((fTiempoAprovechado/fTiempoTotal) * 162);
+                int red = (int) (255 - (fTiempoAprovechado/fTiempoTotal) * 255);
+                view.setBackgroundColor(Color.argb(255, red, green, blue));
                 //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
 
                     interruptCounter++;
@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity{
             }
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,16 +195,6 @@ public class MainActivity extends AppCompatActivity{
         startButton = (Button) findViewById(R.id.startButton);
         mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
         mChronometer= (Chronometer) findViewById(R.id.crono2);
-
-        /*pieChart = (PieChart) findViewById(R.id.idPieChart);
-        pieChart.setRotationEnabled(true);
-        pieChart.setHoleRadius(25f);
-        pieChart.setDrawEntryLabels(true);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setEntryLabelColor(Color.BLACK);
-        pieChart.setHoleColor(Color.parseColor("#00A2FF"));*/
-
-        //addDataSet();
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -224,6 +215,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 //SE GUARDA LA INFORMACION DE LAS INTERRUPCINES Y EL TIEMPO
                 if(clickedStart) {
+                    ConstraintLayout view2 = (ConstraintLayout) findViewById(R.id.ctlid);
+                    view2.setBackgroundColor(Color.argb(255, 0, 162, 255));
                     mChronometerDistraction.stop();
                     mChronometer.stop();
                     lastPause = 0;
@@ -232,7 +225,8 @@ public class MainActivity extends AppCompatActivity{
                     sesion= new Sesion();
                     sesion.setIdSesion(UUID.randomUUID().toString());
                     sesion.setIdUsuario(usuario.getIdUsuario());
-                    sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString()));
+
+                    sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString().split(" ")[1]));
                     sesion.setFecha(cal.get(Calendar.YEAR) + "-" + String.format("%02d", cal.get(Calendar.MONTH ) + 1) + "-" + String.format("%02d", cal.get(Calendar.DAY_OF_MONTH ) + 1)) ;
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
@@ -404,8 +398,6 @@ public class MainActivity extends AppCompatActivity{
         values.put(Constantes.CAMPO_ID_USUARIO, sesion.getIdUsuario());
 
         //GPS
-        values.put(Constantes.CAMPO_LONGITUD,sesion.getLongitud());
-        values.put(Constantes.CAMPO_LATITUD,sesion.getLatitud());
         values.put(Constantes.CAMPO_UBICACION,sesion.getUbicacion());
 
 
