@@ -37,12 +37,6 @@ import com.mastercomp.innovacion.practicainnovacion.entidades.Sesion;
 import com.mastercomp.innovacion.practicainnovacion.entidades.Usuario;
 import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
 import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
-//1import com.github.mikephil.charting.charts.PieChart;
-//import com.github.mikephil.charting.components.Legend;
-//import com.github.mikephil.charting.data.PieData;
-//import com.github.mikephil.charting.data.PieDataSet;
-//import com.github.mikephil.charting.data.PieEntry;
-//1import com.github.mikephil.charting.formatter.PercentFormatter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +60,6 @@ public class MainActivity extends AppCompatActivity{
     private Button statButton;                                  //botón de estadísticas
     private TextView interruptions;                             //contador de interrupciones
     private Chronometer mChronometerDistraction; // este es el cronometro que contara el tiempo de distraccion
-    //private Chronometer mChronometer;//2
     private TextView txtSaludo;
 
     private Usuario usuario;
@@ -85,13 +78,8 @@ public class MainActivity extends AppCompatActivity{
     private TextView mensaje1;
     private TextView mensaje2;
     private TextView tvUbicacion;
-
-//  3  private String[] xData = {"Tiempo Perdido", "Tiempo Aprovechado"};
-//   // PieChart pieChart;
-
     //Esta clase gestiona los eventos de pantalla
     public class ScreenReceiver extends BroadcastReceiver{
-
         @Override
         public void onReceive(Context context, Intent intent) {
             //Si se recibe un evento de pantalla apagada, se actualiza el tiempo de comienzo del timer y se espera al próximo evento
@@ -139,12 +127,10 @@ public class MainActivity extends AppCompatActivity{
                 int red = 389 - blue;
                 view.setBackgroundColor(Color.argb(255, red, 169, blue));
                 //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
-
                     interruptCounter++;
                     interruptions.setText("" + interruptCounter);
                     lastPause = SystemClock.elapsedRealtime();
                     mChronometerDistraction.stop();
-
                 }
             }
         }
@@ -152,7 +138,6 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //4getSupportActionBar().setTitle("Distraction Timer");
         clickedStart = false;
         //GUARDAR ARCHIVO
         final Context context=this;//crear una variable context para guaradr los datos
@@ -169,7 +154,6 @@ public class MainActivity extends AppCompatActivity{
             startActivity(intentRegistro);
             finish();
         }
-
         setContentView(R.layout.activity_main);
         //GPS
         mensaje1 = (TextView) findViewById(R.id.tvlongitud);
@@ -184,10 +168,8 @@ public class MainActivity extends AppCompatActivity{
         // ---
         txtSaludo=(TextView) findViewById(R.id.txtInicio);
         txtSaludo.setText(txtSaludo.getText().toString().concat(usuario.getNombre()).concat(":"));
-
         //Obtenemos los objetos de la interfaz por medio de su id
         interruptions = (TextView) findViewById(R.id.interruptCounter);
-        //5interruptions.setText("Interrupciones: 0");
         statButton = (Button) findViewById(R.id.statbutton);
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         statButton.setOnClickListener(new View.OnClickListener() {
@@ -198,24 +180,11 @@ public class MainActivity extends AppCompatActivity{
         });
         startButton = (Button) findViewById(R.id.startButton);
         mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
-//        6mChronometer= (Chronometer) findViewById(R.id.crono2);
-//
-//        /*pieChart = (PieChart) findViewById(R.id.idPieChart);
-//        pieChart.setRotationEnabled(true);
-//        pieChart.setHoleRadius(25f);
-//        pieChart.setDrawEntryLabels(true);
-//        pieChart.getDescription().setEnabled(false);
-//        pieChart.setEntryLabelColor(Color.BLACK);
-//        pieChart.setHoleColor(Color.parseColor("#00A2FF"));*/
-//
-//        6//addDataSet();
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if(!clickedStart) {
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-//                    7mChronometer.setBase(SystemClock.elapsedRealtime());
-//                    7mChronometer.start();
                     // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
                     clickedStart = true;
                     horainicio = getTimeString();
@@ -230,7 +199,6 @@ public class MainActivity extends AppCompatActivity{
                 //SE GUARDA LA INFORMACION DE LAS INTERRUPCINES Y EL TIEMPO
                 if(clickedStart) {
                     mChronometerDistraction.stop();
-                   //8 mChronometer.stop();
                     lastPause = 0;
                     clickedStart = false;
                     Calendar cal = Calendar.getInstance();
@@ -246,13 +214,8 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setLongitud(mensaje1.getText().toString());
                     sesion.setLatitud(mensaje2.getText().toString());
                     sesion.setUbicacion(tvUbicacion.getText().toString());
-
                     crearSesion(sesion);
-
-                    //9System.out.println();
-
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
-                    //10mChronometer.setBase(SystemClock.elapsedRealtime());
                     interruptCounter = 0;
                     interruptions.setText("0");
                     Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+
@@ -264,14 +227,6 @@ public class MainActivity extends AppCompatActivity{
         });
         txt = (ConstraintLayout)findViewById(R.id.ctlid);
     }
-
-//11    protected void onResume() {
-//        super.onResume();
-//        //crear y actualizar el pie chart
-//        //addDataSet();
-//
-// 11   }
-
     //GSP
     private void locationStart() {
         LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -311,7 +266,6 @@ public class MainActivity extends AppCompatActivity{
                     Address DirCalle = list.get(0);
                     tvUbicacion.setText(DirCalle.getAddressLine(0));
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -325,8 +279,6 @@ public class MainActivity extends AppCompatActivity{
         public void onLocationChanged(Location loc) {
             loc.getLatitude();
             loc.getLongitude();
-            //String Text = "Mi ubicacion actual es: " + "\n Lat = "
-            //        + loc.getLatitude() + "\n Long = " + loc.getLongitude();
             mensaje1.setText(""+loc.getLongitude());
             mensaje2.setText(""+loc.getLatitude());
             setLocation(loc);
@@ -380,18 +332,13 @@ public class MainActivity extends AppCompatActivity{
         }
         return horah + ":" + horam + ":" + horas;
     }
-
     //OPERACIONES BDD
-
     private Usuario consultarUsuario() {
         Usuario usuario= new Usuario();
         AdminSQLiteOpenHelper conn = new AdminSQLiteOpenHelper(this,
                 "bd_usuarios", null, 1);
-
         SQLiteDatabase bd = conn.getReadableDatabase();
-
         Cursor fila = bd.rawQuery("select * from usuario", null);
-
         if (fila.moveToFirst()) {
             usuario.setIdUsuario(fila.getString(0));
             usuario.setNombre(fila.getString(1));
@@ -403,12 +350,9 @@ public class MainActivity extends AppCompatActivity{
         fila.close();
         return usuario;
     }
-
     private void crearSesion(Sesion sesion) {
         AdminSQLiteOpenHelper conn=new AdminSQLiteOpenHelper(this,"bd_usuarios",null,1);
-
         SQLiteDatabase db=conn.getWritableDatabase();
-
         ContentValues values=new ContentValues();
         values.put(Constantes.CAMPO_ID_SESION, sesion.getIdSesion());
         values.put(Constantes.CAMPO_FECHA, sesion.getFecha());
@@ -417,13 +361,10 @@ public class MainActivity extends AppCompatActivity{
         values.put(Constantes.CAMPO_TIEMPO_ESTUDIO, sesion.getTiempo_estudio());
         values.put(Constantes.CAMPO_INTERRUPCIONES, sesion.getInterrupciones());
         values.put(Constantes.CAMPO_ID_USUARIO, sesion.getIdUsuario());
-
         //GPS
         values.put(Constantes.CAMPO_LONGITUD,sesion.getLongitud());
         values.put(Constantes.CAMPO_LATITUD,sesion.getLatitud());
         values.put(Constantes.CAMPO_UBICACION,sesion.getUbicacion());
-
-
         db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
         db.close();
     }
