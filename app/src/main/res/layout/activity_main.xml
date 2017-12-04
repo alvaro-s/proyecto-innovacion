@@ -8,6 +8,23 @@
     android:background="#00A2FF"
     tools:context="com.mastercomp.innovacion.practicainnovacion.MainActivity">
 
+    <at.markushi.ui.CircleButton
+        android:id="@+id/circle"
+        android:layout_width="33dp"
+        android:layout_height="29dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/questionmark3"
+        app:cb_color="#a9a9a9"
+        app:cb_pressedRingWidth="0dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.761"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.699" />
     <Chronometer
         android:id="@+id/crono"
         android:layout_width="wrap_content"
@@ -26,17 +43,14 @@
         android:id="@+id/startButton"
         android:layout_width="114dp"
         android:layout_height="43dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginStart="52dp"
-        android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray"
         android:text="COMENZAR"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/statbutton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.962"
         tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintRight_creator="1" />
 
@@ -47,38 +61,32 @@
         android:layout_height="43dp"
         android:layout_alignBaseline="@+id/startButton"
         android:layout_alignBottom="@+id/startButton"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="48dp"
         android:background="@android:color/darker_gray"
         android:text="@string/pauseButtonLabel"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/statbutton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.962"
         tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintRight_creator="1" />
 
     <TextView
         android:id="@+id/txtInicio"
-        android:layout_width="137dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="68dp"
+        android:layout_width="180dp"
+        android:layout_height="19dp"
+        android:layout_marginBottom="8dp"
+
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-
         android:text="Hola "
-        android:textAlignment="inherit"
+        android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/crono2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.034"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView18" />
 
     <Button
         android:id="@+id/statbutton"
@@ -97,7 +105,7 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.982" />
+        app:layout_constraintVertical_bias="0.955" />
 
     <TextView
         android:id="@+id/tvlongitud"
@@ -197,7 +205,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.165" />
+        app:layout_constraintVertical_bias="0.191" />
 
     <TextView
         android:id="@+id/text"
@@ -230,30 +238,10 @@
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.242"
+        app:layout_constraintVertical_bias="0.268"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="193dp"
-        android:layout_height="103dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/logo1trans" />
-
-    <ImageView
-        android:id="@+id/DrawingImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@color/colorAccent"
-        tools:layout_editor_absoluteX="73dp"
-        tools:layout_editor_absoluteY="145dp" />
 
     <ImageView
         android:id="@+id/imageView9"
@@ -285,7 +273,21 @@
         app:layout_constraintStart_toStartOf="@+id/imageView9"
         app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
-
+    <ImageView
+        android:id="@+id/imageView18"
+        android:layout_width="153dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="444dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@mipmap/logotrans2" />
 
 
 </android.support.constraint.ConstraintLayout>

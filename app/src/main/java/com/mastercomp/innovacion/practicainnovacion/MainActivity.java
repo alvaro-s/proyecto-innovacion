@@ -66,7 +66,7 @@ import com.mastercomp.innovacion.practicainnovacion.entidades.Usuario;
 import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
 import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
 //import com.mikhaellopez.circularimageview.CircularImageView;
-
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -89,11 +89,12 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.graphics.BitmapFactory;
-
+ import	android.app.AlertDialog.Builder;
 import org.w3c.dom.Text;
-
+import android.content.DialogInterface;
 import at.markushi.ui.CircleButton;
 import de.hdodenhof.circleimageview.CircleImageView;
+import android.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity{
     private TextView mensaje1;
     private TextView mensaje2;
     private TextView tvUbicacion;
-
+    private int MessageBox;
     private String[] xData = {"Tiempo Perdido", "Tiempo Aprovechado"};
    // PieChart pieChart;
 
@@ -283,6 +284,22 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+
+        CircleButton Circle = (CircleButton) findViewById(R.id.circle);
+        Circle.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("Bienvenido a Distraction Timer!");
+                alertDialog.setMessage("Distraction Timer es una aplicación que mide el tiempo en el que usas y te distraes en el móvil mientras estudias, trabajas, o haces algo productivo. Comienza a medir tu distracción en el botón de COMENZAR y finaliza con el botón de FINALIZAR. " + System.getProperty("line.separator") + System.getProperty("line.separator") + "El medidor en el medio de la pantalla refleja tu nivel de distracción. Haz clic en el botón de ESTADÍSTICAS para desplegar datos de la última sesión y adicionalmente puedes observar tu historial de sesiones anteriores.");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
         //Al pulsar el botón de fin, se detiene la aplicación y se vuelven a inicializar los valores del timer
         pauseButton = (Button) findViewById(R.id.pauseButton);
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -328,7 +345,10 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         txt = (ConstraintLayout)findViewById(R.id.ctlid);
+
+
     }
+
     //GSP
     private void locationStart() {
         LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
