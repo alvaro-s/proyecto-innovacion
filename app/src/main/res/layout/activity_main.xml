@@ -8,33 +8,26 @@
     android:background="#00A2FF"
     tools:context="com.mastercomp.innovacion.practicainnovacion.MainActivity">
 
-
     <Chronometer
         android:id="@+id/crono"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="52dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="@android:color/white"
         android:textSize="20sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.612"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.299" />
+        app:layout_constraintVertical_bias="0.208"
+        tools:layout_editor_absoluteX="366dp" />
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="114dp"
         android:layout_height="43dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
+        android:layout_marginStart="52dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray"
         android:text="COMENZAR"
@@ -43,6 +36,7 @@
         app:layout_constraintBottom_toTopOf="@+id/statbutton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.962"
         tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintRight_creator="1" />
 
@@ -54,8 +48,7 @@
         android:layout_alignBaseline="@+id/startButton"
         android:layout_alignBottom="@+id/startButton"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginRight="28dp"
+        android:layout_marginEnd="52dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray"
         android:text="@string/pauseButtonLabel"
@@ -63,26 +56,29 @@
         app:layout_constraintBottom_toTopOf="@+id/statbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.962"
         tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintRight_creator="1" />
 
     <TextView
         android:id="@+id/txtInicio"
-        android:layout_width="358dp"
-        android:layout_height="30dp"
+        android:layout_width="137dp"
+        android:layout_height="43dp"
         android:layout_marginBottom="68dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="center"
+
         android:text="Hola "
+        android:textAlignment="inherit"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.034"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.017" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/statbutton"
@@ -136,8 +132,8 @@
 
     <TextView
         android:id="@+id/tvUbicacion"
-        android:layout_width="348dp"
-        android:layout_height="46dp"
+        android:layout_width="84dp"
+        android:layout_height="28dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -146,11 +142,14 @@
         android:gravity="center"
         android:text="Ubicacion"
         android:textColor="@android:color/white"
+        android:textSize="10sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.009"
+        app:layout_constraintVertical_bias="0.061"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -186,88 +185,107 @@
     <Chronometer
         android:id="@+id/crono2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:text="Tiempo"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.047"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.215" />
-
-    <TextView
-        android:id="@+id/interruptCounter"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/interruptCounter"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.356"
+        app:layout_constraintVertical_bias="0.165" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="275dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="Medidor de Distracción:"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="221dp"
+        android:id="@+id/interruptCounter"
+        android:layout_width="275dp"
+        android:layout_height="37dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/interruptCounter"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.242"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="193dp"
+        android:layout_height="103dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@mipmap/logo1trans" />
+
+    <ImageView
+        android:id="@+id/DrawingImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:srcCompat="@color/colorAccent"
+        tools:layout_editor_absoluteX="73dp"
+        tools:layout_editor_absoluteY="145dp" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="178dp"
+        android:layout_height="178dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Tiempo aprovechado:"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.285"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.299" />
+        app:layout_constraintVertical_bias="0.586"
+        app:srcCompat="@drawable/circlemeter" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/Percentage"
+        android:layout_width="64dp"
+        android:layout_height="37dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="56dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Tiempo Total:"
-        android:textColor="@android:color/white"
+        android:gravity="center"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.244"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.215" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintStart_toStartOf="@+id/imageView9"
+        app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="347dp"
-        android:layout_height="174dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.513"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.629"
-        app:srcCompat="@mipmap/logo1trans" />
+
+
 
 </android.support.constraint.ConstraintLayout>

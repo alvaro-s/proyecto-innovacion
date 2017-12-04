@@ -13,12 +13,15 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.hardware.camera2.params.BlackLevelPattern;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.graphics.LightingColorFilter;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -32,12 +35,45 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Bundle;
+import android.view.View;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.AttributeSet;
+import android.widget.ImageView;
+import android.graphics.PorterDuff;
+import com.github.mikephil.charting.charts.PieChart;
 import com.mastercomp.innovacion.practicainnovacion.entidades.Sesion;
 import com.mastercomp.innovacion.practicainnovacion.entidades.Usuario;
 import com.mastercomp.innovacion.practicainnovacion.sqlite.AdminSQLiteOpenHelper;
 import com.mastercomp.innovacion.practicainnovacion.utilidades.Constantes;
+//import com.mikhaellopez.circularimageview.CircularImageView;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.util.AttributeSet;
+import android.view.View;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +81,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.graphics.BitmapFactory;
+
+import org.w3c.dom.Text;
+
+import at.markushi.ui.CircleButton;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -104,6 +153,7 @@ public class MainActivity extends AppCompatActivity{
                         Log.d("Last pause", "" + lastPause);
                     }
                     mChronometerDistraction.start();
+
                 }
                 //pantalla esta apagada
             } else if(intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
@@ -128,11 +178,28 @@ public class MainActivity extends AppCompatActivity{
                 float ffin = Integer.parseInt(hfinSplit[0])*3600 + Integer.parseInt(hfinSplit[1])*60 + Integer.parseInt(hfinSplit[2]);
 
                 float fTiempoTotal = ffin - fini;
+                   TextView percentage = (TextView) findViewById(R.id.Percentage);
 
-                int blue = (int) (60 + (fTiempoAprovechado/fTiempoTotal) * 195);
-                int green = (int) ((fTiempoAprovechado/fTiempoTotal) * 162);
-                int red = (int) (255 - (fTiempoAprovechado/fTiempoTotal) * 255);
-                view.setBackgroundColor(Color.argb(255, red, green, blue));
+                   float PercentNum = ((1 -fTiempoAprovechado/fTiempoTotal)) * 100;
+
+                percentage.setText(String.valueOf(PercentNum).split("\\.")[0] + "%");
+
+                    ImageView imageView = (ImageView) findViewById(R.id.imageView9);
+
+                if(PercentNum < 40){
+
+                    imageView.getDrawable().setColorFilter(Color.argb(255, 79, 255, 63), PorterDuff.Mode.MULTIPLY );
+                }
+                    if(PercentNum <= 60 && PercentNum > 40){
+
+                        imageView.getDrawable().setColorFilter(Color.argb(255, 255, 249, 55), PorterDuff.Mode.MULTIPLY );
+                    }
+                    if(PercentNum > 60){
+
+                        imageView.getDrawable().setColorFilter(Color.argb(255, 255, 90, 90), PorterDuff.Mode.MULTIPLY );
+                    }
+
+                //view.setBackgroundColor(Color.argb(255, red, green, blue));
                 //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
 
                     interruptCounter++;
@@ -148,6 +215,8 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         getSupportActionBar().setTitle("Distraction Timer");
         clickedStart = false;
         //GUARDAR ARCHIVO
@@ -167,6 +236,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         setContentView(R.layout.activity_main);
+
         //GPS
         mensaje1 = (TextView) findViewById(R.id.tvlongitud);
         mensaje2 = (TextView) findViewById(R.id.tvlatitud);
@@ -195,6 +265,9 @@ public class MainActivity extends AppCompatActivity{
         startButton = (Button) findViewById(R.id.startButton);
         mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
         mChronometer= (Chronometer) findViewById(R.id.crono2);
+        mChronometer.setText("Tiempo Total: 00:00");
+        mChronometer.setFormat("Tiempo Total: %s");
+
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -202,6 +275,7 @@ public class MainActivity extends AppCompatActivity{
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
                     mChronometer.setBase(SystemClock.elapsedRealtime());
                     mChronometer.start();
+
                     // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
                     clickedStart = true;
                     horainicio = getTimeString();
@@ -236,6 +310,10 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setLatitud(mensaje2.getText().toString());
                     sesion.setUbicacion(tvUbicacion.getText().toString());
 
+                    TextView percentage = (TextView) findViewById(R.id.Percentage);
+                    percentage.setText("");
+                    ImageView imageView = (ImageView) findViewById(R.id.imageView9);
+                    imageView.getDrawable().setColorFilter(Color.parseColor("#ffffff"), PorterDuff.Mode.MULTIPLY );
                     crearSesion(sesion);
 
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
@@ -404,5 +482,6 @@ public class MainActivity extends AppCompatActivity{
         db.insert(Constantes.TABLA_SESION,Constantes.CAMPO_ID_SESION, values);
         db.close();
     }
+
 
 }

@@ -1,6 +1,7 @@
 package com.mastercomp.innovacion.practicainnovacion;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -62,6 +63,7 @@ public class StatActivity extends AppCompatActivity {
 
         //Lista para manejar el historial de sesiones almacenadas en la bdd
         Button btnHistorial = (Button) findViewById(R.id.btnHistorial);
+        Button btnRegresar = (Button) findViewById(R.id.btnRegresar);
         dialog = new Dialog(StatActivity.this);
         dialog.setContentView(R.layout.pop_historial);
         dialog.setTitle("Historial de sesiones");
@@ -95,7 +97,12 @@ public class StatActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-
+        btnRegresar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent myIntent = new Intent(StatActivity.this,  MainActivity.class);
+                startActivity(myIntent);
+            }
+        });
 
     }
     private void addDataSet(Sesion sesion) {
