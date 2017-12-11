@@ -93,10 +93,10 @@ String aa;
             time = sesion.getHoraInicio();
             String [] timeSplit = time.split(":");
             if(Integer.parseInt(timeSplit[0]) > 12){
-                TimeConverted = (Integer.parseInt(timeSplit[0]) -12)+ ":" +Integer.parseInt(timeSplit[1]) + " pm";
+                TimeConverted = (Integer.parseInt(timeSplit[0]) -12)+ ":" + String.format("%02d",Integer.parseInt(timeSplit[1])) + " pm";
 
             } else {
-                TimeConverted = Integer.parseInt(timeSplit[0])+ ":" +Integer.parseInt(timeSplit[1]) + " am";
+                TimeConverted = Integer.parseInt(timeSplit[0])+ ":" + String.format("%02d", Integer.parseInt(timeSplit[1])) + " am";
             }
             adaptador.add("Session: " + date + " - " + TimeConverted);
         }
@@ -153,13 +153,10 @@ String aa;
         TextView txtHoraInicio = (TextView) findViewById(R.id.txtHoraInicial);
         TextView txtHoraFinal = (TextView) findViewById(R.id.txtHoraFinal);
         TextView txtUbicacion=(TextView) findViewById(R.id.txtUbicacion);
-        if(sesion.getUbicacion() == ""){
-            ubi =sesion.getUbicacion();
-        }
-       else{
-            ubi = "Location Not Available";
-        }
-
+if(sesion.getUbicacion().isEmpty()) {
+    ubi = "Location Not Available";
+}else{
+    ubi = sesion.getUbicacion();}
         if(Integer.parseInt(hiniSplit[0]) > 12){
            Hora1 = Integer.parseInt(hiniSplit[0]) - 12;
            aa = "pm";
@@ -177,8 +174,8 @@ String aa;
 
         txtUbicacion.setText(ubi);
         interruptions.setText("Interruptions: " + inte);
-        txtHoraInicio.setText("Start Time: " + Hora1 + ":" +Integer.parseInt(hiniSplit[1]) + " " + aa);
-        txtHoraFinal.setText("Finish Time: " + Hora2 + ":" +Integer.parseInt(hfinSplit[1]) + " " + aa2);
+        txtHoraInicio.setText("Start Time: " + Hora1 + ":" + String.format("%02d",Integer.parseInt(hiniSplit[1])) + " " + aa);
+        txtHoraFinal.setText("Finish Time: " + Hora2 + ":" +String.format("%02d",Integer.parseInt(hfinSplit[1])) + " " + aa2);
 
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
 
