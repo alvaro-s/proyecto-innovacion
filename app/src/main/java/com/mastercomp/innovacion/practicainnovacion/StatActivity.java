@@ -36,18 +36,31 @@ public class StatActivity extends AppCompatActivity {
     PieChart pieChart;
     List<Sesion> listSesiones;
     Sesion sesion;
-    Format formatterFecha = new SimpleDateFormat("yyyy-MM-dd");
+    Format formatterFecha = new SimpleDateFormat("MM-dd-yyyy");
     ListView listHistorial;
     Dialog dialog;
     ArrayAdapter<String> adaptador;
     String date;
     String time;
+    int Hora1;
+    int Hora2;
+String aa;
+    String aa2;
+    String TimeConverted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_stats);
-        getSupportActionBar().setTitle("Estadísticas");
+        Button btnRegresar = (Button) findViewById(R.id.btnRegresar);
+        btnRegresar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent myIntent = new Intent(StatActivity.this,  MainActivity.class);
+                startActivity(myIntent);
+            }
+        });
+        getSupportActionBar().setTitle("Statistics");
         //estas son caracteristicas del piechart
         pieChart = (PieChart) findViewById(R.id.idPieChart);
         pieChart.setRotationEnabled(true);
@@ -63,20 +76,29 @@ public class StatActivity extends AppCompatActivity {
 
         //Lista para manejar el historial de sesiones almacenadas en la bdd
         Button btnHistorial = (Button) findViewById(R.id.btnHistorial);
-        Button btnRegresar = (Button) findViewById(R.id.btnRegresar);
+
         dialog = new Dialog(StatActivity.this);
         dialog.setContentView(R.layout.pop_historial);
-        dialog.setTitle("Historial de sesiones");
+        dialog.setTitle("History of Sessions");
         listHistorial= (ListView) dialog.findViewById(R.id.listHistorial);
         adaptador = new ArrayAdapter<>(StatActivity.this,
                 android.R.layout.simple_list_item_1);
+
+
 
         for(int i = 0; i < listSesiones.size(); i++)
         {
             sesion = listSesiones.get(i);
             date= sesion.getFecha();
             time = sesion.getHoraInicio();
-            adaptador.add("Sesión: " + date + " - " + time);
+            String [] timeSplit = time.split(":");
+            if(Integer.parseInt(timeSplit[0]) > 12){
+                TimeConverted = (Integer.parseInt(timeSplit[0]) -12)+ ":" +Integer.parseInt(timeSplit[1]) + " pm";
+
+            } else {
+                TimeConverted = Integer.parseInt(timeSplit[0])+ ":" +Integer.parseInt(timeSplit[1]) + " am";
+            }
+            adaptador.add("Session: " + date + " - " + TimeConverted);
         }
         listHistorial.setAdapter(adaptador);
 
@@ -87,7 +109,7 @@ public class StatActivity extends AppCompatActivity {
                 sesion = listSesiones.get(position);
                 TextView titulo = (TextView) findViewById(R.id.txtTitulo);
                 date = sesion.getFecha();
-                titulo.setText("SESIÓN: "+ date);
+                titulo.setText("SESSION: "+ date);
                 addDataSet(sesion);
             }
         });
@@ -97,12 +119,7 @@ public class StatActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-        btnRegresar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent myIntent = new Intent(StatActivity.this,  MainActivity.class);
-                startActivity(myIntent);
-            }
-        });
+
 
     }
     private void addDataSet(Sesion sesion) {
@@ -110,8 +127,10 @@ public class StatActivity extends AppCompatActivity {
         String tiempo = sesion.getTiempo_estudio();//tiempo
         String hini = sesion.getHoraInicio(); //hora inicio
         String hfin = sesion.getHoraFin(); //hora inicio
+
+
         String inte = String.valueOf(sesion.getInterrupciones());//interrupciones
-        String ubi=sesion.getUbicacion();//ubicacion
+        String ubi; //ubicacion
 
         String [] tiempoSplit = tiempo.split(":");
         float fTiempoAprovechado = 0;
@@ -127,18 +146,39 @@ public class StatActivity extends AppCompatActivity {
 
         float fTiempoTotal = ffin - fini;
 
-        String[] xData = new String[]{"Tiempo aprovechado", "Tiempo perdido"};
+        String[] xData = new String[]{"Time Focused", "Time Distracted"};
         float[] yData = {(fTiempoAprovechado/fTiempoTotal) * 100, (1-(fTiempoAprovechado/fTiempoTotal)) * 100};
 
         TextView interruptions = (TextView) findViewById(R.id.txtInterrupciones);
         TextView txtHoraInicio = (TextView) findViewById(R.id.txtHoraInicial);
         TextView txtHoraFinal = (TextView) findViewById(R.id.txtHoraFinal);
         TextView txtUbicacion=(TextView) findViewById(R.id.txtUbicacion);
+        if(sesion.getUbicacion() == ""){
+            ubi =sesion.getUbicacion();
+        }
+       else{
+            ubi = "Location Not Available";
+        }
+
+        if(Integer.parseInt(hiniSplit[0]) > 12){
+           Hora1 = Integer.parseInt(hiniSplit[0]) - 12;
+           aa = "pm";
+        } else {
+            Hora1 = Integer.parseInt(hiniSplit[0]);
+            aa = "am";
+        }
+        if(Integer.parseInt(hfinSplit[0]) > 12 ){
+            Hora2 = Integer.parseInt(hfinSplit[0]) - 12;
+            aa2 = "pm";
+        } else {
+            Hora2 = Integer.parseInt(hfinSplit[0]);
+            aa2 = "am";
+        }
 
         txtUbicacion.setText(ubi);
-        interruptions.setText("Interrupciones: " + inte);
-        txtHoraInicio.setText("Hora Inicial: " + hini);
-        txtHoraFinal.setText("Hora Final: " + hfin);
+        interruptions.setText("Interruptions: " + inte);
+        txtHoraInicio.setText("Start Time: " + Hora1 + ":" +Integer.parseInt(hiniSplit[1]) + " " + aa);
+        txtHoraFinal.setText("Finish Time: " + Hora2 + ":" +Integer.parseInt(hfinSplit[1]) + " " + aa2);
 
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
 
@@ -159,7 +199,7 @@ public class StatActivity extends AppCompatActivity {
         //create pie legend to chart
         Legend legend = pieChart.getLegend();
         legend.setForm(Legend.LegendForm.CIRCLE);
-
+        legend.setEnabled(false);
         PieData pieData = new PieData(pieDataSet);
         pieData.setValueFormatter(new PercentFormatter());
         pieChart.setData(pieData);
@@ -247,7 +287,6 @@ public class StatActivity extends AppCompatActivity {
                 UbicacionIndex = cursor.getColumnIndexOrThrow(Constantes.CAMPO_UBICACION);
                 sesion.setUbicacion(cursor.getString(UbicacionIndex));
             }
-            //----
         }
         return sesion;
     }

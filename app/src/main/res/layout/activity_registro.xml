@@ -12,17 +12,17 @@
 
     <Button
         android:id="@+id/btnContinuar"
-        android:layout_width="151dp"
+        android:layout_width="125dp"
         android:layout_height="52dp"
-        android:text="Siguiente"
+        android:background="@android:color/darker_gray"
+        android:text="NEXT"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498"
-        android:background="@android:color/darker_gray"
-        android:textColor="@android:color/white"/>
+        app:layout_constraintVertical_bias="0.372" />
     />
 
     <EditText
@@ -30,24 +30,9 @@
         android:layout_width="340dp"
 
         android:layout_height="47dp"
-        android:hint="Tu nombre"
-        android:inputType="textPersonName"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textColorLink="@android:color/holo_green_light"
-        app:layout_constraintBottom_toTopOf="@+id/txtApellido"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitle"
-        android:backgroundTint="@android:color/white"/>
-    />
-
-    <EditText
-        android:id="@+id/txtApellido"
-        android:layout_width="339dp"
-        android:layout_height="46dp"
-        android:ems="10"
-        android:hint="Tu apellido"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@android:color/white"
+        android:hint="Your name"
         android:inputType="textPersonName"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
@@ -55,14 +40,31 @@
         app:layout_constraintBottom_toTopOf="@+id/btnContinuar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtNombre"
-        android:backgroundTint="@android:color/white"/>
+        app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
+    />
+
+    <EditText
+        android:id="@+id/txtApellido"
+        android:layout_width="339dp"
+        android:layout_height="46dp"
+        android:backgroundTint="@android:color/white"
+        android:ems="10"
+        android:hint="Tu apellido"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textColorLink="@android:color/holo_green_light"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="264dp" />
 
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Solo algo antes de empezar..."
+        android:text="Before starting..."
         android:textColor="@android:color/white"
         android:textSize="18.0dp"
         app:layout_constraintBottom_toTopOf="@+id/txtNombre"
@@ -77,13 +79,13 @@
         android:layout_height="217dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.971"
+        app:layout_constraintVertical_bias="0.92"
         app:srcCompat="@mipmap/logotrans2" />
 
 

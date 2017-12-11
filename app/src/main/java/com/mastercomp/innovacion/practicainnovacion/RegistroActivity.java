@@ -24,20 +24,24 @@ public class RegistroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Registro");
+        getSupportActionBar().setTitle("Distraction Timer");
         setContentView(R.layout.activity_registro);
         btnContinuar = (Button) findViewById(R.id.btnContinuar);
-        txtNombre = (EditText) findViewById(R.id.txtNombre);
+        txtNombre  = (EditText) findViewById(R.id.txtNombre);
         txtApellido = (EditText) findViewById(R.id.txtApellido);
 
         btnContinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String Nombre = txtNombre.getText().toString();
+                if (Nombre.matches("")) {
+                    Toast.makeText(RegistroActivity.this, "You did not enter a name", Toast.LENGTH_SHORT).show();
+                    return;
+                } else{
                 crearUsuario();
                 Intent intent= new Intent(RegistroActivity.this, MainActivity.class);
                 startActivity(intent);
-                finish();
+                finish();}
             }
         });
     }
@@ -53,7 +57,7 @@ public class RegistroActivity extends AppCompatActivity {
 
         db.insert(Constantes.TABLA_USUARIO,Constantes.CAMPO_ID,values);
 
-        Toast.makeText(getApplicationContext(),"Usuario guardado correctamente",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"User saved successfully",Toast.LENGTH_SHORT).show();
         db.close();
     }
 }

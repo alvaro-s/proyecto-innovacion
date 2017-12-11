@@ -11,7 +11,9 @@ public class Sesion implements Serializable {
     private String idSesion;
     private String idUsuario;
     private String horaInicio;
+    private String horaInicioShow;
     private String horaFin;
+    private String horaFinShow;
     private String Fecha;
     private String tiempo_estudio;
     private int interrupciones;
@@ -21,11 +23,13 @@ public class Sesion implements Serializable {
     private String Ubicacion;
     //
 
-    public Sesion(String idSesion, String idUsuario, String horaInicio, String horaFin, String fecha, String tiempo_estudio, int interrupciones,String longitud,String latitud,String Ubicacion) {
+    public Sesion(String idSesion, String idUsuario, String horaInicio, String horaInicioShow, String horaFin, String horaFinShow, String fecha, String tiempo_estudio, int interrupciones,String longitud,String latitud,String Ubicacion) {
         this.idSesion = idSesion;
         this.idUsuario = idUsuario;
         this.horaInicio = horaInicio;
+        this.horaInicioShow = horaInicioShow;
         this.horaFin = horaFin;
+        this.horaFinShow = horaFinShow;
         Fecha = fecha;
         this.tiempo_estudio = tiempo_estudio;
         this.interrupciones = interrupciones;
@@ -61,11 +65,25 @@ public class Sesion implements Serializable {
         this.horaInicio = horaInicio;
     }
 
+    public String getHoraInicioShow() {return horaInicioShow;
+    }
+
+    public void setHoraInicioShow(String horaInicioShow) {
+        this.horaInicioShow = horaInicioShow;
+    }
+
     public String getHoraFin() {
         return horaFin;
     }
 
     public void setHoraFin(String horaFin) { this.horaFin = horaFin;}
+
+
+    public String getHoraFinShow() {
+        return horaFinShow;
+    }
+
+    public void setHoraFinShow(String horaFinShow) { this.horaFinShow = horaFinShow;}
 
     public String getFecha() {
         return Fecha;

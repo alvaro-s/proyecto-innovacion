@@ -39,21 +39,6 @@
         app:layout_constraintVertical_bias="0.208"
         tools:layout_editor_absoluteX="366dp" />
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="114dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="52dp"
-        android:background="@android:color/darker_gray"
-        android:text="COMENZAR"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/statbutton"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_constraintBaseline_creator="1"
-        tools:layout_constraintRight_creator="1" />
-
 
     <Button
         android:id="@+id/pauseButton"
@@ -61,10 +46,26 @@
         android:layout_height="43dp"
         android:layout_alignBaseline="@+id/startButton"
         android:layout_alignBottom="@+id/startButton"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginEnd="48dp"
         android:background="@android:color/darker_gray"
-        android:text="@string/pauseButtonLabel"
+        android:text="FINISH"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/statbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="114dp"
+        android:layout_height="43dp"
+        android:layout_alignBaseline="@+id/startButton"
+        android:layout_alignBottom="@+id/startButton"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="212dp"
+        android:background="@android:color/darker_gray"
+        android:text="Start"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/statbutton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +80,7 @@
 
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Hola "
+        android:text="Hi "
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="15sp"
@@ -98,7 +99,7 @@
         android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray"
         android:enabled="true"
-        android:text="Estadísticas"
+        android:text="Statistics"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -212,7 +213,7 @@
         android:layout_width="275dp"
         android:layout_height="30dp"
         android:gravity="center"
-        android:text="Medidor de Distracción:"
+        android:text="Distraction meter:"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView9"

@@ -105,7 +105,8 @@ public class MainActivity extends AppCompatActivity{
 
     private String horainicio;
     private String horafin;
-
+    private String HoraInicioShow;
+    private String horafinShow;
     private Button startButton;                                 //botón de comienzo
     private Button pauseButton;                                 //botón de pausa
     private Button statButton;                                  //botón de estadísticas
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity{
     private TextView mensaje2;
     private TextView tvUbicacion;
     private int MessageBox;
-    private String[] xData = {"Tiempo Perdido", "Tiempo Aprovechado"};
+
    // PieChart pieChart;
 
     //Esta clase gestiona los eventos de pantalla
@@ -161,50 +162,12 @@ public class MainActivity extends AppCompatActivity{
                 if (clickedStart) {
                 ConstraintLayout view = (ConstraintLayout) findViewById(R.id.ctlid);
 
-                String tiempoestudio = mChronometerDistraction.getText().toString();
-                String horaahora = getTimeString();
-
-                String [] tiempoSplit = tiempoestudio.split(":");
-
-                float fTiempoAprovechado = 0;
-                for(int i =0 ; i < tiempoSplit.length; i++){
-                    fTiempoAprovechado += Integer.parseInt(tiempoSplit[i])*Math.pow(60, tiempoSplit.length - 1 - i);
-                }
-
-
-                String [] hiniSplit = horainicio.split(":");
-                String [] hfinSplit = horaahora.split(":");
-
-                float fini = Integer.parseInt(hiniSplit[0])*3600 + Integer.parseInt(hiniSplit[1])*60 + Integer.parseInt(hiniSplit[2]);
-                float ffin = Integer.parseInt(hfinSplit[0])*3600 + Integer.parseInt(hfinSplit[1])*60 + Integer.parseInt(hfinSplit[2]);
-
-                float fTiempoTotal = ffin - fini;
-                   TextView percentage = (TextView) findViewById(R.id.Percentage);
-
-                   float PercentNum = ((1 -fTiempoAprovechado/fTiempoTotal)) * 100;
-
-                percentage.setText(String.valueOf(PercentNum).split("\\.")[0] + "%");
-
-                    ImageView imageView = (ImageView) findViewById(R.id.imageView9);
-
-                if(PercentNum < 40){
-
-                    imageView.getDrawable().setColorFilter(Color.argb(255, 79, 255, 63), PorterDuff.Mode.MULTIPLY );
-                }
-                    if(PercentNum <= 60 && PercentNum > 40){
-
-                        imageView.getDrawable().setColorFilter(Color.argb(255, 255, 249, 55), PorterDuff.Mode.MULTIPLY );
-                    }
-                    if(PercentNum > 60){
-
-                        imageView.getDrawable().setColorFilter(Color.argb(255, 255, 90, 90), PorterDuff.Mode.MULTIPLY );
-                    }
 
                 //view.setBackgroundColor(Color.argb(255, red, green, blue));
                 //Si la pantalla se apago y el tiempo esta corriendo, deten el tiempo, coge el tiempo en que se pauso, booleano ResumeTimer es true
 
                     interruptCounter++;
-                    interruptions.setText("Interrupciones: " + interruptCounter);
+                    interruptions.setText("Interruptions: " + interruptCounter);
                     lastPause = SystemClock.elapsedRealtime();
                     mChronometerDistraction.stop();
 
@@ -212,7 +175,52 @@ public class MainActivity extends AppCompatActivity{
             }
         }
     }
+    protected void onResume() {
+        super.onResume();
 
+        if(clickedStart) {
+            //crear y actualizar el pie chart
+            String tiempoestudio = mChronometerDistraction.getText().toString();
+            String horaahora = getTimeString();
+
+            String[] tiempoSplit = tiempoestudio.split(":");
+
+            float fTiempoAprovechado = 0;
+            for (int i = 0; i < tiempoSplit.length; i++) {
+                fTiempoAprovechado += Integer.parseInt(tiempoSplit[i]) * Math.pow(60, tiempoSplit.length - 1 - i);
+            }
+
+
+            String[] hiniSplit = horainicio.split(":");
+            String[] hfinSplit = horaahora.split(":");
+
+            float fini = Integer.parseInt(hiniSplit[0]) * 3600 + Integer.parseInt(hiniSplit[1]) * 60 + Integer.parseInt(hiniSplit[2]);
+            float ffin = Integer.parseInt(hfinSplit[0]) * 3600 + Integer.parseInt(hfinSplit[1]) * 60 + Integer.parseInt(hfinSplit[2]);
+
+            float fTiempoTotal = ffin - fini;
+            TextView percentage = (TextView) findViewById(R.id.Percentage);
+
+            float PercentNum = ((1 - fTiempoAprovechado / fTiempoTotal)) * 100;
+
+            percentage.setText(String.valueOf(PercentNum).split("\\.")[0] + "%");
+
+            ImageView imageView = (ImageView) findViewById(R.id.imageView9);
+
+            if (PercentNum < 40) {
+
+                imageView.getDrawable().setColorFilter(Color.argb(255, 79, 255, 63), PorterDuff.Mode.MULTIPLY);
+            }
+            if (PercentNum <= 60 && PercentNum > 40) {
+
+                imageView.getDrawable().setColorFilter(Color.argb(255, 255, 249, 55), PorterDuff.Mode.MULTIPLY);
+            }
+            if (PercentNum > 60) {
+
+                imageView.getDrawable().setColorFilter(Color.argb(255, 255, 90, 90), PorterDuff.Mode.MULTIPLY);
+            }
+        }
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -254,7 +262,7 @@ public class MainActivity extends AppCompatActivity{
 
         //Obtenemos los objetos de la interfaz por medio de su id
         interruptions = (TextView) findViewById(R.id.interruptCounter);
-        interruptions.setText("Interrupciones: 0");
+        interruptions.setText("Interruptions: 0");
         statButton = (Button) findViewById(R.id.statbutton);
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         statButton.setOnClickListener(new View.OnClickListener() {
@@ -266,8 +274,8 @@ public class MainActivity extends AppCompatActivity{
         startButton = (Button) findViewById(R.id.startButton);
         mChronometerDistraction = (Chronometer) findViewById(R.id.crono);
         mChronometer= (Chronometer) findViewById(R.id.crono2);
-        mChronometer.setText("Tiempo Total: 00:00");
-        mChronometer.setFormat("Tiempo Total: %s");
+        mChronometer.setText("Total Time: 00:00");
+        mChronometer.setFormat("Total Time: %s");
 
         //Al pulsar el botón de comienzo, ponemos en marcha la aplicación y mandamos una notificación avisando de que empezará cuando se apague la pantalla
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +288,8 @@ public class MainActivity extends AppCompatActivity{
                     // Comienza el cronometro de distraccion que cuenta el tiempo q la pantalla esta prendida
                     clickedStart = true;
                     horainicio = getTimeString();
-                    Toast.makeText(MainActivity.this, "La próxima vez que se apague la pantalla se pondrá en marcha el cronómetro", Toast.LENGTH_LONG).show();
+                    HoraInicioShow = getTimeString2();
+                    Toast.makeText(MainActivity.this, "Distraction Timer commenced", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -289,8 +298,8 @@ public class MainActivity extends AppCompatActivity{
         Circle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("Bienvenido a Distraction Timer!");
-                alertDialog.setMessage("Distraction Timer es una aplicación que mide el tiempo en el que usas y te distraes en el móvil mientras estudias, trabajas, o haces algo productivo. Comienza a medir tu distracción en el botón de COMENZAR y finaliza con el botón de FINALIZAR. " + System.getProperty("line.separator") + System.getProperty("line.separator") + "El medidor en el medio de la pantalla refleja tu nivel de distracción. Haz clic en el botón de ESTADÍSTICAS para desplegar datos de la última sesión y adicionalmente puedes observar tu historial de sesiones anteriores.");
+                alertDialog.setTitle("Welcome to Distraction Timer!");
+                alertDialog.setMessage("Distraction Timer is an app that measures the time you use and distract yourself on your mobile phone or tablet while studying, working, or doing something else productive. Start measuring your distraction on the START button and end with the FINISH button." + System.getProperty("line.separator") + System.getProperty("line.separator") + "The circle meter in the middle of the screen reflects your level of distraction. Click on the STATISTICS button to display data from the last session and you can also view data of previous sessions.");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -318,10 +327,12 @@ public class MainActivity extends AppCompatActivity{
                     sesion.setIdUsuario(usuario.getIdUsuario());
 
                     sesion.setInterrupciones(Integer.parseInt(interruptions.getText().toString().split(" ")[1]));
-                    sesion.setFecha(cal.get(Calendar.YEAR) + "-" + String.format("%02d", cal.get(Calendar.MONTH ) + 1) + "-" + String.format("%02d", cal.get(Calendar.DAY_OF_MONTH ) + 1)) ;
+                    sesion.setFecha(String.format("%02d", cal.get(Calendar.MONTH ) + 1) + "/" + String.format("%02d", cal.get(Calendar.DAY_OF_MONTH ) + 1) + "/" +cal.get(Calendar.YEAR)) ;
                     sesion.setTiempo_estudio(mChronometerDistraction.getText().toString());
                     sesion.setHoraInicio(horainicio);
+
                     sesion.setHoraFin(getTimeString());
+
                     //GPS
                     sesion.setLongitud(mensaje1.getText().toString());
                     sesion.setLatitud(mensaje2.getText().toString());
@@ -336,11 +347,11 @@ public class MainActivity extends AppCompatActivity{
                     mChronometerDistraction.setBase(SystemClock.elapsedRealtime());
                     mChronometer.setBase(SystemClock.elapsedRealtime());
                     interruptCounter = 0;
-                    interruptions.setText("Interrupciones: 0");
-                    Toast.makeText(getApplicationContext(),"Numero de Interrupciones: "+
-                            sesion.getInterrupciones() + "\nTiempo Aprovechado: " +
-                            sesion.getTiempo_estudio()+ "\nHora inicio: " + sesion.getHoraInicio() +
-                            "\nHora fin: " + sesion.getHoraFin(), Toast.LENGTH_LONG).show();
+                    interruptions.setText("Interruptions: 0");
+                    Toast.makeText(getApplicationContext(),"Number of Interruptions: "+
+                            sesion.getInterrupciones() + "\nTime Focused: " +
+                            sesion.getTiempo_estudio()+ "\nStart Time: " + HoraInicioShow +
+                            "\nFinish Time: " + getTimeString2(), Toast.LENGTH_LONG).show();
                  }  //--------------------//
             }
         });
@@ -457,7 +468,30 @@ public class MainActivity extends AppCompatActivity{
         }
         return horah + ":" + horam + ":" + horas;
     }
+    private String getTimeString2(){
+        Calendar rightnow = Calendar.getInstance();
+        String horah = "";
+        String aa = "";
+        if(rightnow.get(Calendar.HOUR_OF_DAY) < 10){
+            horah = "0" + rightnow.get(Calendar.HOUR_OF_DAY);
+        }
+        if(rightnow.get(Calendar.HOUR_OF_DAY) > 12){
+            horah = "" + (rightnow.get(Calendar.HOUR_OF_DAY) - 12);
+            aa = "pm";
+        }
+        if(rightnow.get(Calendar.HOUR_OF_DAY) < 12){
 
+            aa = "am";
+        }
+        String horam = "";
+        if(rightnow.get(Calendar.MINUTE) < 10){
+            horam = "0" + rightnow.get(Calendar.MINUTE);
+        }
+        else{
+            horam = "" + rightnow.get(Calendar.MINUTE);
+        }
+        return horah + ":" + horam + " " + aa ;
+    }
     //OPERACIONES BDD
 
     private Usuario consultarUsuario() {
